@@ -23,6 +23,8 @@
   --blue: #3A86FF;
   --purple: #8338EC;
   --orange: #FB5607;
+  --cafe: #A47148;
+  --shopping: #EC4899;
   --dark: #222222;
   --gray-800: #333333;
   --gray-600: #666666;
@@ -106,7 +108,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .detail-nav-bar { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%); }
 .btn-nav-back { background: rgba(0,0,0,0.4); border: none; color: var(--white); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; backdrop-filter: blur(4px); }
 .detail-nav-actions { display: flex; gap: 6px; }
-.btn-nav-chip { background: rgba(0,0,0,0.4); border: none; color: var(--white); padding: 6px 12px; border-radius: 18px; font-size: 12px; font-weight: 600; cursor: pointer; backdrop-filter: blur(4px); }
+.btn-nav-chip { background: rgba(0,0,0,0.4); border: none; color: var(--white); padding: 6px 11px; border-radius: 18px; font-size: 12px; font-weight: 600; cursor: pointer; backdrop-filter: blur(4px); }
 
 .detail-hero { position: relative; height: 250px; background-color: #1f7a6d; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; color: var(--white); }
 .detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%); }
@@ -123,33 +125,53 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .day-chip.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
 .btn-add-day { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--gray-100); border: 1px dashed var(--gray-400); font-size: 18px; color: var(--gray-600); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-.tab-content { display: none; padding: 16px 20px 60px; flex-direction: column; gap: 14px; }
+.tab-content { display: none; padding: 16px 16px 60px; flex-direction: column; gap: 14px; }
 .tab-content.active { display: flex; }
-.timeline-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.timeline-actions .left { display: flex; gap: 8px; }
-.btn-action-sm { background: var(--white); border: 1px solid var(--gray-200); padding: 7px 12px; border-radius: 18px; font-size: 12px; font-weight: 700; color: var(--dark); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 4px; }
+.timeline-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding: 0 4px; gap: 6px; }
+.timeline-actions .left { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.timeline-actions .right { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.btn-action-sm { background: var(--white); border: 1px solid var(--gray-200); padding: 6px 10px; border-radius: 18px; font-size: 11.5px; font-weight: 700; color: var(--dark); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 3px; white-space: nowrap; }
+.btn-action-sm:active { background: var(--gray-100); }
 .btn-action-sm.primary { background: var(--primary); color: var(--white); border-color: var(--primary); }
 
+/* ================= Continuous Vertical Timeline Track & Cards ================= */
 .timeline-list { display: flex; flex-direction: column; position: relative; }
-.timeline-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); border: 1px solid var(--gray-200); margin-bottom: 12px; position: relative; cursor: pointer; }
+.timeline-row { display: flex; align-items: stretch; gap: 10px; position: relative; margin: 0; }
+.timeline-rail { width: 28px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+.timeline-rail-top { width: 2.5px; height: 22px; background: #cfd8dc; flex-shrink: 0; }
+.timeline-rail-top.hidden { background: transparent; }
+.timeline-rail-bottom { width: 2.5px; flex: 1; background: #cfd8dc; min-height: 12px; }
+.timeline-rail-bottom.hidden { background: transparent; }
+
+.timeline-node { width: 24px; height: 24px; border-radius: 50%; color: var(--white); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 3px var(--bg), 0 2px 5px rgba(0,0,0,0.14); z-index: 2; }
+.timeline-memo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); flex-shrink: 0; box-shadow: 0 0 0 3px var(--bg); z-index: 2; margin: 2px 0; }
+.badge-flight { background: var(--blue); }
+.badge-hotel { background: var(--purple); }
+.badge-place { background: #475569; }
+.badge-spot { background: var(--primary-dark); }
+.badge-food { background: var(--orange); }
+.badge-cafe { background: var(--cafe); }
+.badge-shopping { background: var(--shopping); }
+
+.timeline-card-slot { flex: 1; min-width: 0; padding-bottom: 12px; display: flex; flex-direction: column; }
+.timeline-row:last-child .timeline-card-slot { padding-bottom: 0; }
+.timeline-card { background: var(--white); border-radius: var(--radius); padding: 14px 15px; box-shadow: var(--shadow); border: 1px solid var(--gray-200); position: relative; cursor: pointer; }
 .timeline-card:active { transform: scale(0.99); }
 .timeline-card.memo-card { background: #FFFDF0; border-color: #FFEAA7; }
 .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
-.card-title-wrap { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-.card-badge-num { width: 24px; height: 24px; border-radius: 50%; color: var(--white); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.badge-flight { background: var(--blue); }
-.badge-hotel { background: var(--purple); }
-.badge-spot { background: var(--primary-dark); }
-.badge-food { background: var(--orange); }
-.badge-memo { background: #e0aa14; }
+.card-title-wrap { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.card-memo-icon { font-size: 15px; flex-shrink: 0; }
 
 .card-title-line { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; flex-wrap: wrap; }
 .card-title { font-size: 15px; font-weight: 800; color: var(--dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 .card-cat-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
 .cat-flight { background: #EBF2FF; color: var(--blue); }
 .cat-hotel { background: #F3EBFF; color: var(--purple); }
+.cat-place { background: #F1F5F9; color: #475569; }
 .cat-spot { background: #E6FAF6; color: var(--primary-dark); }
 .cat-food { background: #FFF0EB; color: var(--orange); }
+.cat-cafe { background: #FDF3EB; color: var(--cafe); }
+.cat-shopping { background: #FCE7F3; color: var(--shopping); }
 .cat-memo { background: #FFF9DB; color: #b08800; }
 
 .hotel-stay-badge { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #8338EC; color: #fff; flex-shrink: 0; }
@@ -166,18 +188,86 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .chip-highlight { background: #fff4e6; color: #d9480f; border-color: #ffd8a8; font-weight: 600; }
 .chip-hotel { background: #f3ebff; color: #6d28d9; border-color: #ddd6fe; font-weight: 600; }
 .chip-date { background: #e6faf6; color: #1d9785; border-color: #b2f2e5; font-weight: 700; }
+.chip-expense { background: #eef6ff; color: #1d4ed8; border-color: #bfdbfe; font-weight: 700; }
 
-.distance-connector { display: flex; align-items: center; gap: 8px; padding: 0 0 12px 18px; font-size: 11px; color: var(--gray-400); font-weight: 600; }
-.distance-line { width: 2px; height: 16px; background: var(--gray-200); margin-left: 9px; }
-.distance-pill { background: var(--gray-200); color: var(--gray-600); padding: 2px 8px; border-radius: 10px; font-size: 10px; }
-.btn-map-guide { color: var(--blue); text-decoration: none; font-weight: 600; margin-left: 4px; }
+.place-type-chips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.place-type-pill { min-width: 0; padding: 8px 2px; border-radius: 10px; border: 1px solid var(--gray-200); background: var(--gray-100); color: var(--gray-600); font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: center; white-space: nowrap; transition: all 0.15s; }
+.place-type-pill.active[data-ptype="place"] { background: #F1F5F9; border-color: #475569; color: #334155; }
+.place-type-pill.active[data-ptype="spot"] { background: #E6FAF6; border-color: var(--primary-dark); color: var(--primary-dark); }
+.place-type-pill.active[data-ptype="food"] { background: #FFF0EB; border-color: var(--orange); color: var(--orange); }
+.place-type-pill.active[data-ptype="cafe"] { background: #FDF3EB; border-color: var(--cafe); color: var(--cafe); }
+.place-type-pill.active[data-ptype="shopping"] { background: #FCE7F3; border-color: var(--shopping); color: var(--shopping); }
+
+.expense-input-box { background: #f8fbff; border: 1px solid #dbeafe; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.expense-input-row { display: flex; align-items: center; gap: 8px; }
+.expense-curr-select { background: #e0edff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 12px; font-weight: 800; padding: 9px 10px; border-radius: 8px; flex-shrink: 0; outline: none; cursor: pointer; }
+.expense-krw-preview { font-size: 11px; color: var(--blue); font-weight: 700; }
+
+/* ================= Attachments (Modal, Timeline Card & Fullscreen Viewer) ================= */
+.attach-upload-box { background: var(--gray-100); border: 1px dashed #cbd5e1; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.attach-upload-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.btn-attach-pick { background: var(--white); border: 1px solid var(--primary); color: var(--primary-dark); border-radius: 16px; padding: 5px 11px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.btn-attach-pick:active { background: var(--primary-light); }
+.attach-preview-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.attach-thumb-item { position: relative; width: 68px; height: 68px; border-radius: 8px; overflow: hidden; border: 1px solid var(--gray-200); background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+.attach-thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+.attach-thumb-pdf { padding: 4px; text-align: center; font-size: 10px; font-weight: 700; color: #b91c1c; background: #fef2f2; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.attach-thumb-pdf span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 58px; font-size: 9px; color: var(--gray-800); }
+.btn-attach-remove { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,0.68); color: #fff; border: none; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+
+.card-attach-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.card-attach-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; border: 1px solid var(--gray-200); cursor: pointer; background: var(--gray-100); }
+.card-attach-pdf-pill { display: inline-flex; align-items: center; gap: 4px; padding: 5px 9px; border-radius: 8px; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 11px; font-weight: 700; cursor: pointer; max-width: 180px; }
+.card-attach-pdf-pill span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.viewer-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.94); z-index: 200; flex-direction: column; color: #fff; }
+.viewer-backdrop.active { display: flex; }
+.viewer-topbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(0,0,0,0.45); gap: 8px; flex-shrink: 0; }
+.viewer-title { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.viewer-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+.btn-viewer-pill { background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.28); border-radius: 16px; padding: 5px 11px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: none; }
+.viewer-stage { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px; position: relative; }
+.viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.2s ease; transform-origin: center center; cursor: zoom-in; }
+.viewer-stage img.zoomed { max-width: none; max-height: none; width: 190%; cursor: zoom-out; }
+.viewer-pdf-box { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px 20px; text-align: center; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+
+.timeline-connector-row { display: flex; align-items: stretch; gap: 10px; margin: 0; }
+.timeline-connector-rail { width: 28px; flex-shrink: 0; display: flex; justify-content: center; }
+.timeline-connector-line { width: 2.5px; background: #cfd8dc; min-height: 28px; }
+.timeline-connector-content { display: flex; align-items: center; gap: 8px; padding: 0 0 12px 0; font-size: 11px; color: var(--gray-600); font-weight: 600; }
+.distance-pill { background: var(--white); border: 1px solid var(--gray-200); color: var(--gray-600); padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+.btn-map-guide { color: var(--blue); text-decoration: none; font-weight: 700; font-size: 11px; background: #ebf3ff; padding: 3px 9px; border-radius: 12px; }
 
 #map-container { width: 100%; height: 60vh; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--gray-200); position: relative; }
 
+/* ================= Budget Summary, Day Filter & Category Stats ================= */
 .budget-summary-card { background: linear-gradient(135deg, #2BCBB3 0%, #1d9785 100%); color: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-.budget-total-label { font-size: 12px; opacity: 0.9; }
+.budget-total-label { font-size: 12px; opacity: 0.92; font-weight: 600; }
 .budget-total-val { font-size: 26px; font-weight: 900; margin: 4px 0 10px; }
 .budget-rate-box { background: rgba(0,0,0,0.15); border-radius: 10px; padding: 8px 12px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+
+.budget-day-bar { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+.budget-day-bar::-webkit-scrollbar { display: none; }
+.budget-day-pill { flex-shrink: 0; padding: 6px 13px; border-radius: 18px; background: var(--white); border: 1px solid var(--gray-200); font-size: 12px; font-weight: 700; color: var(--gray-600); cursor: pointer; transition: all 0.15s; }
+.budget-day-pill.active { background: var(--dark); color: var(--white); border-color: var(--dark); }
+
+.budget-stats-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; border: 1px solid var(--gray-200); box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 10px; }
+.budget-stats-header { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 800; color: var(--dark); }
+.budget-stacked-bar { width: 100%; height: 10px; border-radius: 999px; background: var(--gray-100); overflow: hidden; display: flex; gap: 2px; }
+.budget-stacked-seg { height: 100%; transition: width 0.25s ease; }
+.budget-cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+.budget-cat-item { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 12px; min-width: 0; }
+.budget-cat-left { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.budget-cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.budget-cat-name { font-weight: 700; color: var(--gray-800); white-space: nowrap; }
+.budget-cat-pct { font-size: 11px; color: var(--gray-400); font-weight: 600; }
+.budget-cat-amt { font-weight: 800; color: var(--dark); font-size: 11.5px; white-space: nowrap; }
+
+.budget-expense-row { background: var(--white); padding: 12px 14px; border-radius: 12px; border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; gap: 10px; transition: background 0.15s; }
+.budget-expense-row.editable { cursor: pointer; }
+.budget-expense-row.editable:active { background: var(--gray-100); }
+.budget-day-tag { display: inline-block; font-size: 10px; font-weight: 700; background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); padding: 1px 6px; border-radius: 4px; margin-right: 4px; vertical-align: middle; }
+.budget-linked-tag { display: inline-block; font-size: 10px; font-weight: 700; background: #e6faf6; color: var(--primary-dark); padding: 1px 6px; border-radius: 4px; margin-left: 4px; vertical-align: middle; }
 
 .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; min-height: 62px; padding-bottom: var(--safe-bottom); background: var(--white); border-top: 1px solid var(--gray-200); display: flex; justify-content: space-around; align-items: center; z-index: 60; box-shadow: 0 -4px 16px rgba(0,0,0,0.04); }
 .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--gray-400); font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; padding: 8px 0; }
@@ -190,11 +280,15 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .cat-chooser-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .cat-chooser-btn { background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; transition: all 0.15s; }
 .cat-chooser-btn:active { transform: scale(0.98); background: var(--primary-light); border-color: var(--primary); }
-.cat-chooser-btn.full-span { grid-column: 1 / -1; }
 .cat-chooser-icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--white); box-shadow: 0 2px 6px rgba(0,0,0,0.06); flex-shrink: 0; }
 .cat-chooser-info { display: flex; flex-direction: column; gap: 2px; }
 .cat-chooser-title { font-size: 14px; font-weight: 800; color: var(--dark); }
 .cat-chooser-desc { font-size: 11px; color: var(--gray-600); }
+
+.share-scope-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.share-scope-btn { padding: 9px 10px; border-radius: 10px; border: 1px solid var(--gray-200); background: var(--gray-100); font-size: 13px; font-weight: 700; color: var(--gray-600); cursor: pointer; }
+.share-scope-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+.share-preview-box { width: 100%; min-height: 220px; max-height: 45vh; padding: 12px; border: 1px solid var(--gray-200); border-radius: 12px; background: var(--gray-100); font-size: 12.5px; line-height: 1.55; color: var(--dark); resize: none; outline: none; font-family: inherit; }
 
 .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; justify-content: center; align-items: flex-end; }
 .modal-backdrop.active { display: flex; }
@@ -213,9 +307,12 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .form-row-3 { display: grid; grid-template-columns: 1.05fr 0.9fr 1.15fr; gap: 8px; }
 .form-row-3 .form-input, .form-row-3 .form-select { padding: 10px 8px; font-size: 13px; }
 .form-row-3 .form-group label { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.form-row-datetime { display: grid; grid-template-columns: 1.32fr 1.03fr 0.75fr; gap: 6px; }
+.form-row-datetime .form-group { min-width: 0; }
+.form-row-datetime .form-group label { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.form-row-datetime .form-input, .form-row-datetime .form-select { padding: 9px 5px; font-size: 12px; min-width: 0; }
 
 .flight-notice-box { background: #ebf5ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #1e40af; line-height: 1.45; display: none; flex-direction: column; gap: 8px; }
-.flight-notice-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .btn-mini-pill { background: var(--white); border: 1px solid #93c5fd; color: #1d4ed8; border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
 .btn-mini-pill:active { background: #dbeafe; }
 
@@ -241,6 +338,14 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .toast.toast-error { background: rgba(220, 53, 69, 0.95); }
 .toast.toast-success { background: rgba(43, 203, 179, 0.95); }
 @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
+
+@media print {
+  body { background: #fff !important; }
+  #app-container { max-width: 100% !important; box-shadow: none !important; }
+  .detail-nav-bar, .day-bar-wrapper, .timeline-actions, .bottom-nav, .fab-add-btn, .card-btns, .btn-map-guide, .modal-backdrop, #toast-container { display: none !important; }
+  .screen { padding-bottom: 0 !important; }
+  .detail-hero { height: 150px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
   </style>
 </head>
 <body>
@@ -279,7 +384,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
           <div class="quick-icon">💱</div>
           <div class="quick-text">
             <h4>실시간 간이 환율</h4>
-            <p>엔화 / 달러 즉시 계산</p>
+            <p>여행지 통화 즉시 계산</p>
           </div>
         </div>
         <div id="btn-master-checklist" class="quick-item" onclick="openMasterChecklistModal()">
@@ -324,7 +429,8 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
     <div class="detail-nav-bar">
       <button class="btn-nav-back" onclick="navigateToHome()" title="홈으로">←</button>
       <div class="detail-nav-actions">
-        <button class="btn-nav-chip" onclick="openEditTripModal()">⚙️ 여행 설정</button>
+        <button class="btn-nav-chip" onclick="openShareScheduleModal()">📄 일정공유</button>
+        <button class="btn-nav-chip" onclick="openEditTripModal()">⚙️ 설정</button>
         <button class="btn-nav-chip" onclick="openCoverModal()">📷 커버</button>
       </div>
     </div>
@@ -350,7 +456,10 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
         <div class="left">
           <span id="timeline-day-heading" style="font-size: 14px; font-weight: 800; color: var(--dark);">Day 1 일정</span>
         </div>
-        <button class="btn-action-sm" onclick="optimizeCurrentDayRoute()" title="거리 순 자동 정렬">✨ 동선 최적화</button>
+        <div class="right">
+          <button class="btn-action-sm" onclick="sortCurrentDayByTime()" title="방문·탑승 시간순 자동 정렬">🕒 시간순</button>
+          <button class="btn-action-sm" onclick="optimizeCurrentDayRoute()" title="거리 순 자동 정렬">✨ 동선최적화</button>
+        </div>
       </div>
       <div id="timeline-list" class="timeline-list"></div>
     </div>
@@ -366,24 +475,39 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 
     <div id="tab-budget" class="tab-content">
       <div class="budget-summary-card">
-        <div class="budget-total-label">총 지출 금액</div>
+        <div class="budget-total-label" id="budget-scope-label">전체 총 지출 금액</div>
         <div class="budget-total-val" id="budget-krw-total">₩ 0</div>
         <div class="budget-rate-box">
           <span id="budget-curr-total">현지 지출: 0 JPY</span>
           <span id="budget-curr-rate" onclick="editExchangeRate()" style="text-decoration: underline; cursor: pointer;">환율 설정 ></span>
         </div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-        <h4 style="font-size: 14px; font-weight: 800;">경비 내역</h4>
+
+      <div id="budget-day-bar" class="budget-day-bar"></div>
+
+      <div id="budget-stats-card" class="budget-stats-card" style="display: none;">
+        <div class="budget-stats-header">
+          <span>📊 카테고리별 지출 비중</span>
+          <span id="budget-stats-count" style="font-size: 11px; color: var(--gray-400); font-weight: 600;">0건</span>
+        </div>
+        <div id="budget-stacked-bar" class="budget-stacked-bar"></div>
+        <div id="budget-cat-grid" class="budget-cat-grid"></div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+        <h4 id="budget-list-heading" style="font-size: 14px; font-weight: 800;">경비 내역</h4>
         <button class="btn-action-sm primary" onclick="openExpenseModal()">+ 지출 등록</button>
       </div>
       <div id="expense-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
 
     <div id="tab-checklist" class="tab-content">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
         <h4 style="font-size: 14px; font-weight: 800;">여행 준비물 체크</h4>
-        <button class="btn-action-sm" onclick="addChecklistItem()">+ 물품 추가</button>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button class="btn-action-sm" onclick="openMasterChecklistModal()">🧳 상시 준비물</button>
+          <button class="btn-action-sm primary" onclick="addChecklistItem()">+ 물품 추가</button>
+        </div>
       </div>
       <div id="checklist-items" style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;"></div>
     </div>
@@ -396,6 +520,30 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
     </div>
   </div>
 
+</div>
+
+<!-- 일정 공유 / 한눈에 보기 모달 -->
+<div id="modal-share-schedule" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <h3>📄 일정표 공유 & 한눈에 보기</h3>
+      <button class="modal-close" onclick="closeModal('modal-share-schedule')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size: 12.5px; color: var(--gray-600); line-height: 1.45;">
+        가족이나 동행자에게 카카오톡·메신저로 바로 보낼 수 있도록 일정을 깔끔한 텍스트로 정리했습니다.
+      </div>
+      <div class="share-scope-tabs">
+        <button type="button" id="btn-share-scope-day" class="share-scope-btn active" onclick="setShareScope('day')">현재 일차만 (Day 1)</button>
+        <button type="button" id="btn-share-scope-all" class="share-scope-btn" onclick="setShareScope('all')">전체 여행 일정</button>
+      </div>
+      <textarea id="share-schedule-preview" class="share-preview-box" readonly></textarea>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn-full btn-sub" onclick="printScheduleOverview()">🖨️ 인쇄/PDF</button>
+      <button type="button" class="btn-full btn-primary" onclick="copyShareScheduleText()">📋 카톡용 텍스트 복사</button>
+    </div>
+  </div>
 </div>
 
 <!-- 새 여행 / 여행 설정 모달 -->
@@ -478,7 +626,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
   </div>
 </div>
 
-<!-- 일정 유형 선택 모달 -->
+<!-- 일정 유형 선택 모달 (비행기 · 숙소 · 장소 · 메모 4가지) -->
 <div id="modal-choose-category" class="modal-backdrop">
   <div class="modal-sheet">
     <div class="modal-head">
@@ -501,25 +649,18 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
             <span class="cat-chooser-desc">체크인·아웃·연박 자동</span>
           </span>
         </button>
-        <button type="button" class="cat-chooser-btn" onclick="selectCategoryToAdd('spot')">
+        <button type="button" class="cat-chooser-btn" onclick="selectCategoryToAdd('place')">
           <span class="cat-chooser-icon">📍</span>
           <span class="cat-chooser-info">
-            <span class="cat-chooser-title">관광지</span>
-            <span class="cat-chooser-desc">명소·방문일자·위치</span>
+            <span class="cat-chooser-title">장소</span>
+            <span class="cat-chooser-desc">관광·맛집·카페·쇼핑</span>
           </span>
         </button>
-        <button type="button" class="cat-chooser-btn" onclick="selectCategoryToAdd('food')">
-          <span class="cat-chooser-icon">🍴</span>
-          <span class="cat-chooser-info">
-            <span class="cat-chooser-title">맛집</span>
-            <span class="cat-chooser-desc">식당·카페·추천메뉴</span>
-          </span>
-        </button>
-        <button type="button" class="cat-chooser-btn full-span" onclick="selectCategoryToAdd('memo')">
+        <button type="button" class="cat-chooser-btn" onclick="selectCategoryToAdd('memo')">
           <span class="cat-chooser-icon">📝</span>
           <span class="cat-chooser-info">
             <span class="cat-chooser-title">메모</span>
-            <span class="cat-chooser-desc">티켓 교환, 준비사항 등 자유 메모</span>
+            <span class="cat-chooser-desc">교통·티켓·준비사항 등</span>
           </span>
         </button>
       </div>
@@ -570,9 +711,21 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
         </div>
       </div>
 
+      <div id="field-place-type" class="category-extra-field" style="display: none; flex-direction: column; gap: 6px;">
+        <label style="font-size: 12px; font-weight: 700; color: var(--gray-800);">장소 구분 선택</label>
+        <div class="place-type-chips" id="place-type-chips">
+          <button type="button" class="place-type-pill active" data-ptype="place" onclick="selectPlaceSubtype('place')">📍 장소</button>
+          <button type="button" class="place-type-pill" data-ptype="spot" onclick="selectPlaceSubtype('spot')">🏛️ 관광</button>
+          <button type="button" class="place-type-pill" data-ptype="food" onclick="selectPlaceSubtype('food')">🍴 맛집</button>
+          <button type="button" class="place-type-pill" data-ptype="cafe" onclick="selectPlaceSubtype('cafe')">☕ 카페</button>
+          <button type="button" class="place-type-pill" data-ptype="shopping" onclick="selectPlaceSubtype('shopping')">🛍️ 쇼핑</button>
+        </div>
+        <input type="hidden" id="place-subtype" value="place">
+      </div>
+
       <div class="form-group">
         <label id="lbl-item-name">장소 / 일정 이름</label>
-        <input type="text" id="item-name" class="form-input" placeholder="예: 센소지, 호텔 그레이스리, Seoul → Tokyo">
+        <input type="text" id="item-name" class="form-input" placeholder="예: 센소지, 이치란 라멘, 블루보틀">
       </div>
 
       <div id="field-hotel" class="category-extra-field" style="display: none; flex-direction: column; gap: 10px;">
@@ -622,33 +775,28 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       </div>
 
       <div id="field-general-time" class="category-extra-field" style="display: none; flex-direction: column; gap: 10px;">
-        <div class="form-group">
-          <label>방문 일자</label>
-          <input type="date" id="item-date" class="form-input">
-        </div>
-        <div class="form-row">
+        <div class="form-row-datetime">
+          <div class="form-group">
+            <label>방문 일자</label>
+            <input type="date" id="item-date" class="form-input">
+          </div>
           <div class="form-group">
             <label>방문 시간</label>
             <input type="time" id="item-time" class="form-input" value="10:00">
           </div>
           <div class="form-group">
-            <label>예상 체류 시간</label>
+            <label>체류 시간</label>
             <select id="item-duration" class="form-select">
               <option value="30분">30분</option>
               <option value="1시간" selected>1시간</option>
-              <option value="1시간 30분">1시간 30분</option>
+              <option value="1.5시간">1.5시간</option>
               <option value="2시간">2시간</option>
-              <option value="2시간 30분">2시간 30분</option>
+              <option value="2.5시간">2.5시간</option>
               <option value="3시간">3시간</option>
-              <option value="3시간 30분">3시간 30분</option>
+              <option value="3.5시간">3.5시간</option>
               <option value="4시간">4시간</option>
-              <option value="4시간 30분">4시간 30분</option>
               <option value="5시간">5시간</option>
-              <option value="5시간 30분">5시간 30분</option>
               <option value="6시간">6시간</option>
-              <option value="6시간 30분">6시간 30분</option>
-              <option value="7시간">7시간</option>
-              <option value="7시간 30분">7시간 30분</option>
               <option value="8시간">8시간</option>
             </select>
           </div>
@@ -656,7 +804,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       </div>
 
       <div id="field-geo" class="form-group">
-        <label>위치 (주소·장소명 / 구글맵 URL·좌표 / 지도 찍기)</label>
+        <label id="lbl-item-geo">위치 (주소·장소명 / 구글맵 URL·좌표 / 지도 찍기)</label>
         <div style="display: flex; gap: 6px;">
           <input type="text" id="item-address" class="form-input" placeholder="주소, 장소명, 구글맵 링크 또는 위도,경도" oninput="tryParseGoogleMapsOrCoords(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();searchGeoCoords();}">
           <button type="button" class="btn-action-sm" onclick="searchGeoCoords()" style="flex-shrink: 0;">위치찾기</button>
@@ -678,9 +826,33 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
         <span id="geo-status-msg" style="font-size: 11px;"></span>
       </div>
 
+      <div id="field-expense" class="expense-input-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label for="item-expense-amount" style="font-size: 12px; font-weight: 700; color: var(--gray-800);">💳 지출 금액 (선택 · 가계부 자동 연동)</label>
+          <span id="item-expense-krw" class="expense-krw-preview"></span>
+        </div>
+        <div class="expense-input-row">
+          <input type="text" inputmode="decimal" id="item-expense-amount" class="form-input" placeholder="금액 입력 시 가계부에 자동 반영" oninput="formatCurrencyInput(this); updateItemExpensePreview();">
+          <select id="item-expense-currency" class="expense-curr-select" onchange="updateItemExpensePreview()">
+            <option value="JPY">JPY</option>
+            <option value="KRW">KRW</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>상세 메모 & 꿀팁</label>
-        <textarea id="item-notes" class="form-textarea" rows="3" placeholder="예약번호, 추천 메뉴, 현지 안내 등"></textarea>
+        <textarea id="item-notes" class="form-textarea" rows="3" placeholder="예약번호, 추천 메뉴, 교통편 안내 등"></textarea>
+      </div>
+
+      <div class="attach-upload-box">
+        <div class="attach-upload-top">
+          <span style="font-size: 12px; font-weight: 700; color: var(--gray-800);">📎 바우처 · 사진 · PDF 첨부</span>
+          <button type="button" class="btn-attach-pick" onclick="document.getElementById('item-attach-input').click()">+ 파일/사진 선택</button>
+          <input type="file" id="item-attach-input" accept="image/*,application/pdf" multiple style="display: none;" onchange="handleItemAttachmentFiles(event)">
+        </div>
+        <div style="font-size: 11px; color: var(--gray-600);">QR코드·캡처 사진이나 E-티켓 PDF를 첨부하면 비행기 모드에서도 바로 열람됩니다.</div>
+        <div id="item-attach-preview-grid" class="attach-preview-grid"></div>
       </div>
     </div>
     <div class="modal-foot">
@@ -688,6 +860,19 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       <button class="btn-full btn-primary" onclick="submitItemForm()">저장하기</button>
     </div>
   </div>
+</div>
+
+<!-- 첨부파일 전체 화면 뷰어 모달 -->
+<div id="modal-attachment-viewer" class="viewer-backdrop">
+  <div class="viewer-topbar">
+    <div id="viewer-file-title" class="viewer-title">첨부파일 보기</div>
+    <div class="viewer-actions">
+      <button type="button" id="btn-viewer-zoom" class="btn-viewer-pill" onclick="toggleViewerImageZoom()">🔍 2배 확대</button>
+      <a id="btn-viewer-download" class="btn-viewer-pill" href="#" download="attachment">⬇️ 저장/열기</a>
+      <button type="button" class="btn-viewer-pill" onclick="closeAttachmentViewer()">✕ 닫기</button>
+    </div>
+  </div>
+  <div id="viewer-stage" class="viewer-stage"></div>
 </div>
 
 <!-- 백업/복원 모달 -->
@@ -788,38 +973,48 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
   </div>
 </div>
 
-<!-- 가계부 지출 모달 -->
+<!-- 가계부 지출 등록 / 수정 모달 -->
 <div id="modal-expense" class="modal-backdrop">
   <div class="modal-sheet">
     <div class="modal-head">
-      <h3>새 지출 내역 등록</h3>
+      <h3 id="expense-modal-title">새 지출 내역 등록</h3>
       <button class="modal-close" onclick="closeModal('modal-expense')">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
         <label>지출 내용</label>
-        <input type="text" id="expense-title" class="form-input" placeholder="예: 저녁 이치란 라멘">
+        <input type="text" id="expense-title" class="form-input" placeholder="예: 저녁 이치란 라멘, 편의점 간식">
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>금액 (외화 기준)</label>
-          <input type="text" inputmode="decimal" id="expense-amount" class="form-input" placeholder="예: 2,500" oninput="formatCurrencyInput(this)">
+          <label>금액</label>
+          <input type="text" inputmode="decimal" id="expense-amount" class="form-input" placeholder="예: 2,500" oninput="formatCurrencyInput(this); updateBudgetModalPreview();">
         </div>
         <div class="form-group">
-          <label>통화 / 적용 환율</label>
-          <input type="text" id="expense-currency-info" class="form-input" readonly style="background: var(--gray-100); color: var(--gray-600); font-weight: 700;">
+          <label>결제 통화 선택</label>
+          <select id="expense-currency-select" class="form-select" onchange="updateBudgetModalPreview()">
+            <option value="JPY">JPY (현지 통화)</option>
+            <option value="KRW">KRW (원화)</option>
+          </select>
         </div>
       </div>
-      <div class="form-group">
-        <label>카테고리</label>
-        <select id="expense-category" class="form-select">
-          <option value="식비">🍴 식비</option>
-          <option value="교통">🚕 교통</option>
-          <option value="숙박">🏨 숙박</option>
-          <option value="관광">🎫 관광/입장료</option>
-          <option value="쇼핑">🛍️ 쇼핑</option>
-          <option value="기타">기타</option>
-        </select>
+      <div id="expense-modal-preview" style="font-size: 12px; color: var(--blue); font-weight: 700; min-height: 16px;"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>지출 일차</label>
+          <select id="expense-day-select" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label>카테고리</label>
+          <select id="expense-category" class="form-select">
+            <option value="식비">🍴 식비</option>
+            <option value="교통">🚕 교통</option>
+            <option value="숙박">🏨 숙박</option>
+            <option value="관광">🎫 관광/입장료</option>
+            <option value="쇼핑">🛍️ 쇼핑</option>
+            <option value="기타">📌 기타</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="modal-foot">
@@ -980,7 +1175,7 @@ async function triggerPwaInstall() {
   if (isIos) {
     showToast('Safari 하단 공유 버튼(⬆️)을 누른 뒤 "홈 화면에 추가"를 선택해 주세요!', 'info');
   } else {
-    showToast('브라우저 우측 상단 메뉴(⋮)에서 "홈 화면에 추가" 또는 "앱 설치"를 눌러주세요!', 'info');
+    showToast('https:// 웹 호스팅 주소로 접속 후 메뉴(⋮)에서 "홈 화면에 추가"를 눌러주세요!', 'info');
   }
 }
 
@@ -1272,31 +1467,328 @@ let mapMarkers = [];
 let mapPolyline = null;
 let pickerMap = null;
 let pickerMarker = null;
-let currentCategory = 'spot';
+let currentCategory = 'place';
 let categoryDrafts = {};
 let lastFlightSearchQuery = '';
-
-function formatNumberWithCommas(val) {
-  if (val === null || val === undefined || val === '') return '';
-  const cleaned = String(val).replace(/[^0-9.]/g, '');
-  if (!cleaned) return '';
-  const parts = cleaned.split('.');
-  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.length > 1 ? `${intPart}.${parts.slice(1).join('')}` : intPart;
+let currentShareScope = 'day';
+let budgetDayFilter = 'all';
+let editingExpenseId = null;
+let currentDraftAttachments = [];
+const attachmentMemoryCache = new Map();
+let activeViewerObjectUrl = null;
+// ... existing code ... -->
+function openAviationIdb() {
+  if (aviationDbPromise) return aviationDbPromise;
+  aviationDbPromise = new Promise((resolve, reject) => {
+    if (typeof indexedDB === 'undefined') {
+      reject(new Error('IndexedDB not supported'));
+      return;
+    }
+    const req = indexedDB.open(AVIATION_DB_NAME, 2);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'key' });
+      if (!db.objectStoreNames.contains('airports')) db.createObjectStore('airports', { keyPath: 'iata' });
+      if (!db.objectStoreNames.contains('airlines')) db.createObjectStore('airlines', { keyPath: 'iata' });
+      if (!db.objectStoreNames.contains('routes')) {
+        const routeStore = db.createObjectStore('routes', { keyPath: 'id' });
+        routeStore.createIndex('by_airline', 'airline', { unique: false });
+        routeStore.createIndex('by_src_dst', 'srcDst', { unique: false });
+        routeStore.createIndex('by_src', 'src', { unique: false });
+      }
+      if (!db.objectStoreNames.contains('savedFlights')) {
+        db.createObjectStore('savedFlights', { keyPath: 'code' });
+      }
+      if (!db.objectStoreNames.contains('attachments')) {
+        db.createObjectStore('attachments', { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+  return aviationDbPromise;
 }
 
-function parseFormattedNumber(val) {
-  if (val === null || val === undefined || val === '') return NaN;
-  const cleaned = String(val).replace(/,/g, '').trim();
-  return cleaned === '' ? NaN : parseFloat(cleaned);
+/* ================= Offline Attachment Storage (IndexedDB) & Viewer ================= */
+function compressImageToDataUrl(file, maxDim = 1400, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w >= h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const outMime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+          const compressed = canvas.toDataURL(outMime, quality);
+
+          const thumbCanvas = document.createElement('canvas');
+          const tSize = 140;
+          const scale = Math.min(tSize / w, tSize / h, 1);
+          thumbCanvas.width = Math.max(1, Math.round(w * scale));
+          thumbCanvas.height = Math.max(1, Math.round(h * scale));
+          thumbCanvas.getContext('2d').drawImage(img, 0, 0, thumbCanvas.width, thumbCanvas.height);
+          const thumbDataUrl = thumbCanvas.toDataURL('image/jpeg', 0.72);
+
+          resolve({ dataUrl: compressed, thumbDataUrl });
+        } catch (err) {
+          resolve({ dataUrl: e.target.result, thumbDataUrl: e.target.result });
+        }
+      };
+      img.onerror = () => reject(new Error('이미지 로드 실패'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('파일 읽기 실패'));
+    reader.readAsDataURL(file);
+  });
 }
 
-function formatCurrencyInput(el) {
-  if (!el) return;
-  const raw = el.value;
-  const formatted = formatNumberWithCommas(raw);
-  if (raw !== formatted) {
-    el.value = formatted;
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('PDF 읽기 실패'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveAttachmentRecordToIdb(record) {
+  attachmentMemoryCache.set(record.id, record);
+  try {
+    const db = await openAviationIdb();
+    await new Promise((resolve) => {
+      const tx = db.transaction('attachments', 'readwrite');
+      tx.objectStore('attachments').put(record);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  } catch (e) {}
+}
+
+async function getAttachmentRecordFromIdb(attId) {
+  if (!attId) return null;
+  if (attachmentMemoryCache.has(attId)) return attachmentMemoryCache.get(attId);
+  try {
+    const db = await openAviationIdb();
+    const rec = await new Promise((resolve) => {
+      const tx = db.transaction('attachments', 'readonly');
+      const req = tx.objectStore('attachments').get(attId);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+    if (rec) attachmentMemoryCache.set(attId, rec);
+    return rec;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function deleteAttachmentRecordFromIdb(attId) {
+  if (!attId) return;
+  attachmentMemoryCache.delete(attId);
+  try {
+    const db = await openAviationIdb();
+    await new Promise((resolve) => {
+      const tx = db.transaction('attachments', 'readwrite');
+      tx.objectStore('attachments').delete(attId);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  } catch (e) {}
+}
+
+async function handleItemAttachmentFiles(event) {
+  const files = Array.from(event.target.files || []);
+  if (files.length === 0) return;
+
+  for (const file of files) {
+    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+    const isImg = file.type.startsWith('image/');
+    if (!isPdf && !isImg) {
+      showToast('이미지(JPG/PNG) 또는 PDF 파일만 첨부할 수 있습니다.', 'error');
+      continue;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      showToast('15MB 이하의 파일만 첨부할 수 있습니다.', 'error');
+      continue;
+    }
+
+    try {
+      const attId = 'att_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+      if (isImg) {
+        const { dataUrl, thumbDataUrl } = await compressImageToDataUrl(file);
+        const rec = {
+          id: attId,
+          name: file.name,
+          mimeType: file.type || 'image/jpeg',
+          kind: 'image',
+          dataUrl,
+          thumbDataUrl
+        };
+        await saveAttachmentRecordToIdb(rec);
+        currentDraftAttachments.push({ id: attId, name: file.name, kind: 'image', thumbDataUrl });
+      } else {
+        const dataUrl = await readFileAsDataUrl(file);
+        const rec = {
+          id: attId,
+          name: file.name,
+          mimeType: 'application/pdf',
+          kind: 'pdf',
+          dataUrl,
+          thumbDataUrl: ''
+        };
+        await saveAttachmentRecordToIdb(rec);
+        currentDraftAttachments.push({ id: attId, name: file.name, kind: 'pdf', thumbDataUrl: '' });
+      }
+    } catch (err) {
+      showToast(`첨부 처리 오류: ${err.message}`, 'error');
+    }
+  }
+
+  event.target.value = '';
+  renderDraftAttachmentPreviews();
+  showToast('파일이 첨부되었습니다.', 'success');
+}
+
+function renderDraftAttachmentPreviews() {
+  const grid = document.getElementById('item-attach-preview-grid');
+  if (!grid) return;
+  grid.replaceChildren();
+
+  currentDraftAttachments.forEach((att, idx) => {
+    const box = document.createElement('div');
+    box.className = 'attach-thumb-item';
+    box.onclick = (e) => {
+      if (e.target.closest('.btn-attach-remove')) return;
+      openAttachmentViewer(att.id);
+    };
+
+    if (att.kind === 'image' && att.thumbDataUrl) {
+      const img = document.createElement('img');
+      img.src = att.thumbDataUrl;
+      img.alt = att.name || '첨부 이미지';
+      box.appendChild(img);
+    } else {
+      const pdfDiv = document.createElement('div');
+      pdfDiv.className = 'attach-thumb-pdf';
+      pdfDiv.innerHTML = `<div style="font-size:18px;">📄</div><span>${escapeHtmlString(att.name || 'PDF')}</span>`;
+      box.appendChild(pdfDiv);
+    }
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'btn-attach-remove';
+    delBtn.textContent = '✕';
+    delBtn.onclick = (e) => {
+      e.stopPropagation();
+      currentDraftAttachments.splice(idx, 1);
+      renderDraftAttachmentPreviews();
+    };
+    box.appendChild(delBtn);
+    grid.appendChild(box);
+  });
+}
+
+function dataUrlToBlobUrl(dataUrl, mimeType) {
+  try {
+    const parts = dataUrl.split(',');
+    const byteString = atob(parts[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeType || 'application/octet-stream' });
+    return URL.createObjectURL(blob);
+  } catch (e) {
+    return dataUrl;
+  }
+}
+
+async function openAttachmentViewer(attId) {
+  const rec = await getAttachmentRecordFromIdb(attId);
+  if (!rec || !rec.dataUrl) {
+    showToast('첨부파일 데이터를 찾을 수 없습니다.', 'error');
+    return;
+  }
+
+  if (activeViewerObjectUrl && activeViewerObjectUrl.startsWith('blob:')) {
+    URL.revokeObjectURL(activeViewerObjectUrl);
+    activeViewerObjectUrl = null;
+  }
+
+  const titleEl = document.getElementById('viewer-file-title');
+  const stageEl = document.getElementById('viewer-stage');
+  const zoomBtn = document.getElementById('btn-viewer-zoom');
+  const dlBtn = document.getElementById('btn-viewer-download');
+
+  if (titleEl) titleEl.textContent = rec.name || '첨부파일';
+  stageEl.replaceChildren();
+
+  const blobUrl = dataUrlToBlobUrl(rec.dataUrl, rec.mimeType);
+  activeViewerObjectUrl = blobUrl;
+
+  if (dlBtn) {
+    dlBtn.href = blobUrl;
+    dlBtn.download = rec.name || (rec.kind === 'pdf' ? 'voucher.pdf' : 'voucher.jpg');
+  }
+
+  if (rec.kind === 'image') {
+    if (zoomBtn) {
+      zoomBtn.style.display = 'inline-block';
+      zoomBtn.textContent = '🔍 2배 확대';
+    }
+    const img = document.createElement('img');
+    img.id = 'viewer-active-img';
+    img.src = blobUrl;
+    img.alt = rec.name || '첨부 이미지';
+    img.onclick = () => toggleViewerImageZoom();
+    stageEl.appendChild(img);
+  } else {
+    if (zoomBtn) zoomBtn.style.display = 'none';
+    const pdfCard = document.createElement('div');
+    pdfCard.className = 'viewer-pdf-box';
+    pdfCard.innerHTML = `
+      <div style="font-size: 44px;">📄</div>
+      <div style="font-size: 15px; font-weight: 800; word-break: break-all;">${escapeHtmlString(rec.name || 'E-티켓 바우처.pdf')}</div>
+      <div style="font-size: 12px; color: #94a3b8; line-height: 1.45;">오프라인 저장소에서 불러온 PDF 문서입니다. 아래 버튼을 눌러 기기 PDF 뷰어로 바로 열 수 있습니다.</div>
+      <a href="${blobUrl}" target="_blank" rel="noopener noreferrer" class="btn-full btn-primary" style="text-decoration:none; display:block; margin-top:4px;">📖 PDF 문서 바로 열기</a>
+    `;
+    stageEl.appendChild(pdfCard);
+  }
+
+  document.getElementById('modal-attachment-viewer').classList.add('active');
+}
+
+function toggleViewerImageZoom() {
+  const img = document.getElementById('viewer-active-img');
+  const zoomBtn = document.getElementById('btn-viewer-zoom');
+  if (!img) return;
+  const isZoomed = img.classList.toggle('zoomed');
+  if (zoomBtn) {
+    zoomBtn.textContent = isZoomed ? '🔎 원래 크기' : '🔍 2배 확대';
+  }
+}
+
+function closeAttachmentViewer() {
+  document.getElementById('modal-attachment-viewer').classList.remove('active');
+  if (activeViewerObjectUrl && activeViewerObjectUrl.startsWith('blob:')) {
+    URL.revokeObjectURL(activeViewerObjectUrl);
+    activeViewerObjectUrl = null;
   }
 }
 
@@ -1337,18 +1829,103 @@ function formatCleanFlightTitle(rawTitle, depCode, arrCode, depCity, arrCity) {
 
 function createEmptyCategoryDrafts() {
   const trip = getActiveTrip();
+  const tripCurr = (trip && trip.currency) ? trip.currency : 'JPY';
   const baseDate = (trip && trip.days && trip.days[AppData.activeDayIdx] && trip.days[AppData.activeDayIdx].date)
     ? trip.days[AppData.activeDayIdx].date
     : (trip ? trip.startDate : getLocalDateString(new Date()));
   const nextDate = addDaysToDateString(baseDate, 1);
 
   return {
-    flight: { date: baseDate, name: '', flightCode: '', depAirport: '', arrAirport: '', depTime: '', arrTime: '', depCity: '', arrCity: '', address: '', lat: '', lng: '', notes: '' },
-    hotel: { checkinDate: baseDate, checkoutDate: nextDate, name: '', checkin: '15:00', checkout: '11:00', nights: '1', breakfast: '조식 포함', luggage: '짐보관 가능', address: '', lat: '', lng: '', notes: '' },
-    spot: { date: baseDate, name: '', time: '10:00', duration: '1시간', address: '', lat: '', lng: '', notes: '' },
-    food: { date: baseDate, name: '', time: '12:00', duration: '1시간', address: '', lat: '', lng: '', notes: '' },
+    flight: { date: baseDate, name: '', flightCode: '', depAirport: '', arrAirport: '', depTime: '', arrTime: '', depCity: '', arrCity: '', address: '', lat: '', lng: '', expenseAmount: '', expenseCurrency: 'KRW', notes: '' },
+    hotel: { checkinDate: baseDate, checkoutDate: nextDate, name: '', checkin: '15:00', checkout: '11:00', nights: '1', breakfast: '조식 포함', luggage: '짐보관 가능', address: '', lat: '', lng: '', expenseAmount: '', expenseCurrency: tripCurr, notes: '' },
+    place: { subtype: 'place', date: baseDate, name: '', time: '10:00', duration: '1시간', address: '', lat: '', lng: '', expenseAmount: '', expenseCurrency: tripCurr, notes: '' },
     memo: { name: '', notes: '' }
   };
+}
+
+function mapItemCategoryToExpenseCategory(cat) {
+  if (cat === 'flight') return '교통';
+  if (cat === 'hotel') return '숙박';
+  if (cat === 'food' || cat === 'cafe') return '식비';
+  if (cat === 'shopping') return '쇼핑';
+  if (cat === 'spot') return '관광';
+  if (cat === 'place') return '기타';
+  return '기타';
+}
+
+function populateExpenseCurrencySelect(selectEl, trip, selectedCurr) {
+  if (!selectEl) return;
+  const localCurr = (trip && trip.currency) ? trip.currency : 'JPY';
+  selectEl.replaceChildren();
+
+  const optLocal = document.createElement('option');
+  optLocal.value = localCurr;
+  optLocal.textContent = localCurr === 'KRW' ? 'KRW (원)' : `${localCurr} (현지)`;
+  selectEl.appendChild(optLocal);
+
+  if (localCurr !== 'KRW') {
+    const optKrw = document.createElement('option');
+    optKrw.value = 'KRW';
+    optKrw.textContent = 'KRW (원)';
+    selectEl.appendChild(optKrw);
+  }
+
+  const targetVal = (selectedCurr && (selectedCurr === localCurr || selectedCurr === 'KRW'))
+    ? selectedCurr
+    : localCurr;
+  selectEl.value = targetVal;
+}
+
+function updateItemExpensePreview() {
+  const trip = getActiveTrip();
+  const currEl = document.getElementById('item-expense-currency');
+  const prevEl = document.getElementById('item-expense-krw');
+  const amtEl = document.getElementById('item-expense-amount');
+  if (!trip || !currEl || !prevEl || !amtEl) return;
+
+  const chosenCurr = currEl.value || (trip.currency || 'JPY');
+  const isKrw = chosenCurr === 'KRW';
+  const rate = trip.exchangeRate || 9.1;
+
+  const amt = parseFormattedNumber(amtEl.value);
+  if (!isNaN(amt) && amt > 0) {
+    prevEl.textContent = isKrw
+      ? `원화 ${Math.round(amt).toLocaleString()} 원 그대로 반영`
+      : `약 ${Math.round(amt * rate).toLocaleString()} 원 (환율 ${rate})`;
+  } else {
+    prevEl.textContent = '';
+  }
+}
+
+function syncLinkedExpenseForItem(trip, linkKey, linkValue, title, amount, cat, chosenCurrency, dayIdx = -1) {
+  if (!trip) return;
+  if (!Array.isArray(trip.expenses)) trip.expenses = [];
+  const expIdx = trip.expenses.findIndex(e => e[linkKey] === linkValue);
+
+  if (!isNaN(amount) && amount > 0) {
+    const mappedCat = mapItemCategoryToExpenseCategory(cat);
+    const expCurrency = chosenCurrency || (trip.currency || 'JPY');
+    if (expIdx !== -1) {
+      trip.expenses[expIdx].title = title;
+      trip.expenses[expIdx].amount = amount;
+      trip.expenses[expIdx].category = mappedCat;
+      trip.expenses[expIdx].currency = expCurrency;
+      if (dayIdx >= 0) trip.expenses[expIdx].dayIdx = dayIdx;
+    } else {
+      const newExp = {
+        id: 'exp_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        title,
+        amount,
+        category: mappedCat,
+        currency: expCurrency,
+        dayIdx: dayIdx >= 0 ? dayIdx : -1
+      };
+      newExp[linkKey] = linkValue;
+      trip.expenses.push(newExp);
+    }
+  } else if (expIdx !== -1) {
+    trip.expenses.splice(expIdx, 1);
+  }
 }
 
 function getDayLabelForDate(trip, dateStr) {
@@ -1406,7 +1983,6 @@ function syncHotelDatesAndNights(trigger) {
 
 /* ================= Open-Source Aviation IndexedDB Engine ================= */
 const AVIATION_DB_NAME = 'TripNoteOpenAviationDB';
-const AVIATION_DB_VERSION = 1;
 const OPENFLIGHTS_URLS = {
   airports: 'https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat',
   airlines: 'https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat',
@@ -1414,35 +1990,6 @@ const OPENFLIGHTS_URLS = {
 };
 let aviationDbPromise = null;
 let isSyncingAviation = false;
-
-function openAviationIdb() {
-  if (aviationDbPromise) return aviationDbPromise;
-  aviationDbPromise = new Promise((resolve, reject) => {
-    if (typeof indexedDB === 'undefined') {
-      reject(new Error('IndexedDB not supported'));
-      return;
-    }
-    const req = indexedDB.open(AVIATION_DB_NAME, AVIATION_DB_VERSION);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains('meta')) db.createObjectStore('meta', { keyPath: 'key' });
-      if (!db.objectStoreNames.contains('airports')) db.createObjectStore('airports', { keyPath: 'iata' });
-      if (!db.objectStoreNames.contains('airlines')) db.createObjectStore('airlines', { keyPath: 'iata' });
-      if (!db.objectStoreNames.contains('routes')) {
-        const routeStore = db.createObjectStore('routes', { keyPath: 'id' });
-        routeStore.createIndex('by_airline', 'airline', { unique: false });
-        routeStore.createIndex('by_src_dst', 'srcDst', { unique: false });
-        routeStore.createIndex('by_src', 'src', { unique: false });
-      }
-      if (!db.objectStoreNames.contains('savedFlights')) {
-        db.createObjectStore('savedFlights', { keyPath: 'code' });
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-  return aviationDbPromise;
-}
 
 function parseCsvLine(line) {
   const result = [];
@@ -2293,19 +2840,43 @@ async function submitItemForm() {
     ? (currentDay.items || []).find(i => i.id === AppData.editingItemId)
     : null;
 
+  const previousAttIds = existingItem && Array.isArray(existingItem.attachments)
+    ? existingItem.attachments.map(a => a.id)
+    : [];
+  const nextAttIds = new Set(currentDraftAttachments.map(a => a.id));
+  for (const oldId of previousAttIds) {
+    if (!nextAttIds.has(oldId)) {
+      deleteAttachmentRecordFromIdb(oldId);
+    }
+  }
+
+  const resolvedCat = (currentCategory === 'place')
+    ? (document.getElementById('place-subtype').value || 'place')
+    : currentCategory;
+
+  const parsedExpense = resolvedCat === 'memo'
+    ? NaN
+    : parseFormattedNumber(document.getElementById('item-expense-amount').value);
+  const validExpense = (!isNaN(parsedExpense) && parsedExpense > 0) ? parsedExpense : 0;
+  const chosenExpenseCurrency = document.getElementById('item-expense-currency').value || (trip.currency || 'JPY');
+  const isEditing = Boolean(AppData.editingItemId);
+
   const itemObj = {
     id: AppData.editingItemId || ('item_' + Date.now()),
-    cat: currentCategory,
+    cat: resolvedCat,
     name,
-    address: currentCategory === 'memo' ? '' : document.getElementById('item-address').value.trim(),
+    address: resolvedCat === 'memo' ? '' : document.getElementById('item-address').value.trim(),
     notes: document.getElementById('item-notes').value,
-    lat: (currentCategory === 'memo' || isNaN(latVal)) ? null : latVal,
-    lng: (currentCategory === 'memo' || isNaN(lngVal)) ? null : lngVal
+    lat: (resolvedCat === 'memo' || isNaN(latVal)) ? null : latVal,
+    lng: (resolvedCat === 'memo' || isNaN(lngVal)) ? null : lngVal,
+    expenseAmount: validExpense,
+    expenseCurrency: validExpense > 0 ? chosenExpenseCurrency : (trip.currency || 'JPY'),
+    attachments: currentDraftAttachments.map(a => ({ ...a }))
   };
 
   let targetDayIdx = AppData.activeDayIdx;
 
-  if (currentCategory === 'flight') {
+  if (resolvedCat === 'flight') {
     const flightDate = document.getElementById('flight-date').value || currentDay.date || '';
     const flightCode = document.getElementById('flight-code').value.trim().toUpperCase();
     const depCode = extractAirportCode(document.getElementById('flight-dep-airport').value);
@@ -2345,7 +2916,9 @@ async function submitItemForm() {
         lng: itemObj.lng
       });
     }
-  } else if (currentCategory === 'hotel') {
+
+    syncLinkedExpenseForItem(trip, 'linkedItemId', itemObj.id, itemObj.name, validExpense, 'flight', chosenExpenseCurrency, targetDayIdx);
+  } else if (resolvedCat === 'hotel') {
     if (!name) { showToast('숙소 이름을 입력해 주세요.', 'error'); return; }
     const inDate = document.getElementById('hotel-checkin-date').value || currentDay.date || trip.startDate;
     let outDate = document.getElementById('hotel-checkout-date').value;
@@ -2391,7 +2964,10 @@ async function submitItemForm() {
         address: itemObj.address,
         notes: itemObj.notes,
         lat: itemObj.lat,
-        lng: itemObj.lng
+        lng: itemObj.lng,
+        expenseAmount: validExpense,
+        expenseCurrency: chosenExpenseCurrency,
+        attachments: itemObj.attachments.map(a => ({ ...a }))
       };
       if (!trip.days[dIdx].items) trip.days[dIdx].items = [];
       if (role === 'checkout') {
@@ -2401,6 +2977,8 @@ async function submitItemForm() {
       }
     }
 
+    syncLinkedExpenseForItem(trip, 'linkedHotelGroupId', groupId, `${itemObj.name} (${nights}박)`, validExpense, 'hotel', chosenExpenseCurrency, startDayIdx);
+
     AppData.activeDayIdx = startDayIdx;
     saveDataToStorage();
     closeModal('modal-item');
@@ -2408,20 +2986,28 @@ async function submitItemForm() {
     renderDayChips();
     renderTimeline();
     if (AppData.activeTab === 'map') renderMap();
-    showToast(`숙소 일정이 Day ${startDayIdx + 1}(체크인) ~ 체크아웃 일자까지 자동 반영되었습니다!`, 'success');
+    if (AppData.activeTab === 'budget') renderBudget();
+    showToast(
+      validExpense > 0
+        ? `숙소 일정과 가계부(${validExpense.toLocaleString()} ${chosenExpenseCurrency})가 자동 반영되었습니다!`
+        : `숙소 일정이 Day ${startDayIdx + 1}(체크인) ~ 체크아웃 일자까지 자동 반영되었습니다!`,
+      'success'
+    );
     return;
-  } else if (currentCategory === 'spot' || currentCategory === 'food') {
-    if (!name) { showToast('이름을 입력해 주세요.', 'error'); return; }
+  } else if (resolvedCat === 'memo') {
+    if (!name) { showToast('제목을 입력해 주세요.', 'error'); return; }
+  } else {
+    if (!name) { showToast('장소 이름을 입력해 주세요.', 'error'); return; }
     const visitDate = document.getElementById('item-date').value || currentDay.date || '';
     itemObj.date = visitDate;
     itemObj.time = document.getElementById('item-time').value;
     itemObj.duration = document.getElementById('item-duration').value;
     if (visitDate) targetDayIdx = ensureTripDayForDate(trip, visitDate);
-  } else {
-    if (!name) { showToast('제목을 입력해 주세요.', 'error'); return; }
+
+    syncLinkedExpenseForItem(trip, 'linkedItemId', itemObj.id, itemObj.name, validExpense, resolvedCat, chosenExpenseCurrency, targetDayIdx);
   }
 
-  if (AppData.editingItemId) {
+  if (isEditing) {
     if (targetDayIdx === AppData.activeDayIdx) {
       const idx = currentDay.items.findIndex(i => i.id === AppData.editingItemId);
       if (idx !== -1) currentDay.items[idx] = itemObj;
@@ -2430,11 +3016,9 @@ async function submitItemForm() {
       if (!trip.days[targetDayIdx].items) trip.days[targetDayIdx].items = [];
       trip.days[targetDayIdx].items.push(itemObj);
     }
-    showToast('일정이 수정되었습니다.', 'success');
   } else {
     if (!trip.days[targetDayIdx].items) trip.days[targetDayIdx].items = [];
     trip.days[targetDayIdx].items.push(itemObj);
-    showToast(`새 일정이 Day ${targetDayIdx + 1}에 추가되었습니다.`, 'success');
   }
 
   AppData.activeDayIdx = targetDayIdx;
@@ -2444,77 +3028,22 @@ async function submitItemForm() {
   renderDayChips();
   renderTimeline();
   if (AppData.activeTab === 'map') renderMap();
-}
+  if (AppData.activeTab === 'budget') renderBudget();
 
-/* ================= Date & Helper Functions ================= */
-function getLocalDateString(dateObj = new Date()) {
-  const y = dateObj.getFullYear();
-  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const d = String(dateObj.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-function parseLocalDate(dateStr) {
-  if (!dateStr || typeof dateStr !== 'string') return new Date();
-  const parts = dateStr.split('-');
-  if (parts.length === 3) {
-    return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-  }
-  return new Date(dateStr);
-}
-
-function addDaysToDateString(dateStr, days) {
-  const d = parseLocalDate(dateStr);
-  d.setDate(d.getDate() + days);
-  return getLocalDateString(d);
-}
-
-function getDDayText(startStr, endStr) {
-  const todayStr = getLocalDateString(new Date());
-  const today = parseLocalDate(todayStr);
-  const start = parseLocalDate(startStr);
-  const end = parseLocalDate(endStr);
-  const diffTime = start.getTime() - today.getTime();
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays > 0) return { text: `D-${diffDays}`, status: 'future' };
-  if (today >= start && today <= end) return { text: '여행 중 ✨', status: 'current' };
-  return { text: '여행 완료', status: 'past' };
-}
-
-function calcDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function showToast(message, type = 'info') {
-  let container = document.getElementById('toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'toast-container';
-    document.body.appendChild(container);
-  }
-  const toast = document.createElement('div');
-  toast.className = `toast ${type === 'error' ? 'toast-error' : type === 'success' ? 'toast-success' : ''}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 2900);
-}
-
-function loadDataFromStorage() {
-  try {
-    const saved = localStorage.getItem('my_tripnote_app_data');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed && Array.isArray(parsed.trips)) AppData = parsed;
-    }
-    const savedMaster = localStorage.getItem('my_tripnote_master_checklist');
-    masterChecklist = savedMaster ? JSON.parse(savedMaster) : [...DEFAULT_MASTER_CHECKLIST];
-  } catch (e) {
-    showToast('데이터 로드 중 오류가 발생했습니다.', 'error');
+  if (isEditing) {
+    showToast(
+      validExpense > 0
+        ? `일정 및 가계부(${validExpense.toLocaleString()} ${chosenExpenseCurrency})가 수정되었습니다.`
+        : '일정이 수정되었습니다.',
+      'success'
+    );
+  } else {
+    showToast(
+      validExpense > 0
+        ? `일정 추가 및 가계부(${validExpense.toLocaleString()} ${chosenExpenseCurrency})에 자동 반영되었습니다.`
+        : `새 일정이 Day ${targetDayIdx + 1}에 추가되었습니다.`,
+      'success'
+    );
   }
 }
 
@@ -2698,6 +3227,7 @@ function deleteTrip(tripId) {
 function navigateToDetail(tripId) {
   AppData.activeTripId = tripId;
   AppData.activeDayIdx = 0;
+  budgetDayFilter = 'all';
   saveDataToStorage();
   document.getElementById('screen-home').classList.remove('active');
   document.getElementById('screen-detail').classList.add('active');
@@ -2782,10 +3312,22 @@ function addNewDay() {
   showToast(`Day ${nextDayNum} 일정이 추가되었습니다.`);
 }
 
-/* ================= Timeline Rendering ================= */
+/* ================= Continuous Vertical Timeline Rendering ================= */
+const PLACE_BADGE_LABELS = {
+  flight: '비행기',
+  hotel: '숙소',
+  place: '장소',
+  spot: '관광',
+  food: '맛집',
+  cafe: '카페',
+  shopping: '쇼핑',
+  memo: '메모'
+};
+
 function renderTimeline() {
   const trip = getActiveTrip();
   if (!trip) return;
+  const currency = trip.currency || 'JPY';
   const currentDay = (trip.days && trip.days[AppData.activeDayIdx]) ? trip.days[AppData.activeDayIdx] : { items: [] };
   const headingEl = document.getElementById('timeline-day-heading');
   if (headingEl) {
@@ -2802,16 +3344,82 @@ function renderTimeline() {
     return;
   }
 
+  const items = currentDay.items;
   let markerSeq = 1;
-  currentDay.items.forEach((item, idx) => {
+
+  items.forEach((item, idx) => {
     const isMemo = item.cat === 'memo';
     const isFlight = item.cat === 'flight';
     const isHotel = item.cat === 'hotel';
+    const isFirstItem = idx === 0;
+    const isLastItem = idx === items.length - 1;
+
+    let prevPlaceItem = null;
+    if (!isMemo) {
+      for (let j = idx - 1; j >= 0; j--) {
+        if (items[j].cat !== 'memo') {
+          prevPlaceItem = items[j];
+          break;
+        }
+      }
+    }
+    const hasConnectorBefore = Boolean(
+      !isMemo &&
+      item.lat && item.lng &&
+      prevPlaceItem && prevPlaceItem.lat && prevPlaceItem.lng
+    );
+
+    if (hasConnectorBefore) {
+      const dist = calcDistance(prevPlaceItem.lat, prevPlaceItem.lng, item.lat, item.lng).toFixed(1);
+      const connectorRow = document.createElement('div');
+      connectorRow.className = 'timeline-connector-row';
+      connectorRow.innerHTML = `
+        <div class="timeline-connector-rail"><div class="timeline-connector-line"></div></div>
+        <div class="timeline-connector-content">
+          <span class="distance-pill">약 ${dist} km</span>
+          <a href="https://www.google.com/maps/dir/?api=1&origin=${prevPlaceItem.lat},${prevPlaceItem.lng}&destination=${item.lat},${item.lng}&travelmode=transit" target="_blank" rel="noopener noreferrer" class="btn-map-guide">길찾기 ↗</a>
+        </div>
+      `;
+      container.appendChild(connectorRow);
+    }
+
+    const row = document.createElement('div');
+    row.className = 'timeline-row';
+
+    const rail = document.createElement('div');
+    rail.className = 'timeline-rail';
+
+    const topSeg = document.createElement('div');
+    topSeg.className = `timeline-rail-top ${isFirstItem ? 'hidden' : ''}`;
+    rail.appendChild(topSeg);
+
+    if (isMemo) {
+      const dot = document.createElement('div');
+      dot.className = 'timeline-memo-dot';
+      rail.appendChild(dot);
+    } else {
+      const node = document.createElement('div');
+      const badgeClass = ['flight', 'hotel', 'place', 'spot', 'food', 'cafe', 'shopping'].includes(item.cat)
+        ? `badge-${item.cat}`
+        : 'badge-place';
+      node.className = `timeline-node ${badgeClass}`;
+      node.textContent = String(markerSeq++);
+      rail.appendChild(node);
+    }
+
+    const bottomSeg = document.createElement('div');
+    bottomSeg.className = `timeline-rail-bottom ${isLastItem ? 'hidden' : ''}`;
+    rail.appendChild(bottomSeg);
+
+    row.appendChild(rail);
+
+    const slot = document.createElement('div');
+    slot.className = 'timeline-card-slot';
 
     const card = document.createElement('div');
     card.className = `timeline-card ${isMemo ? 'memo-card' : ''}`;
     card.onclick = (e) => {
-      if (e.target.closest('.card-btns') || e.target.closest('.btn-map-guide')) return;
+      if (e.target.closest('.card-btns') || e.target.closest('.btn-map-guide') || e.target.closest('.card-attach-strip')) return;
       openItemEditModal(item.id);
     };
 
@@ -2821,10 +3429,12 @@ function renderTimeline() {
     const titleWrap = document.createElement('div');
     titleWrap.className = 'card-title-wrap';
 
-    const badgeNum = document.createElement('span');
-    badgeNum.className = `card-badge-num ${isFlight ? 'badge-flight' : isHotel ? 'badge-hotel' : isMemo ? 'badge-memo' : item.cat === 'food' ? 'badge-food' : 'badge-spot'}`;
-    badgeNum.textContent = isMemo ? '📝' : String(markerSeq++);
-    titleWrap.appendChild(badgeNum);
+    if (isMemo) {
+      const memoIcon = document.createElement('span');
+      memoIcon.className = 'card-memo-icon';
+      memoIcon.textContent = '📝';
+      titleWrap.appendChild(memoIcon);
+    }
 
     const textWrap = document.createElement('div');
     textWrap.className = 'card-title-line';
@@ -2844,9 +3454,10 @@ function renderTimeline() {
     }
     textWrap.appendChild(cardTitle);
 
+    const validCat = PLACE_BADGE_LABELS[item.cat] ? item.cat : 'place';
     const catBadge = document.createElement('span');
-    catBadge.className = `card-cat-badge cat-${item.cat || 'spot'}`;
-    catBadge.textContent = isFlight ? '비행기' : isHotel ? '숙소' : isMemo ? '메모' : item.cat === 'food' ? '맛집' : '관광지';
+    catBadge.className = `card-cat-badge cat-${validCat}`;
+    catBadge.textContent = PLACE_BADGE_LABELS[validCat];
     textWrap.appendChild(catBadge);
 
     if (isHotel && item.hotelRole) {
@@ -2910,9 +3521,11 @@ function renderTimeline() {
 
     const chipsWrap = document.createElement('div');
     chipsWrap.className = 'card-chips';
+    const itemExpCurr = item.expenseCurrency || (isFlight ? 'KRW' : currency);
     if (isFlight) {
       if (item.date) chipsWrap.innerHTML += `<span class="chip chip-date">📅 ${escapeHtmlString(item.date)}</span>`;
       if (item.flightCode) chipsWrap.innerHTML += `<span class="chip chip-highlight">편명 ${escapeHtmlString(item.flightCode)}</span>`;
+      if (item.expenseAmount > 0) chipsWrap.innerHTML += `<span class="chip chip-expense">💳 ${Number(item.expenseAmount).toLocaleString()} ${escapeHtmlString(itemExpCurr)}</span>`;
     } else if (isHotel) {
       const inDateText = item.checkinDate ? `${item.checkinDate.slice(5)} ` : '';
       const outDateText = item.checkoutDate ? `${item.checkoutDate.slice(5)} ` : '';
@@ -2929,27 +3542,49 @@ function renderTimeline() {
         if (item.breakfast) chipsWrap.innerHTML += `<span class="chip">${escapeHtmlString(item.breakfast)}</span>`;
         if (item.luggage) chipsWrap.innerHTML += `<span class="chip">${escapeHtmlString(item.luggage)}</span>`;
         if (!item.breakfast && !item.luggage && item.service) chipsWrap.innerHTML += `<span class="chip chip-highlight">${escapeHtmlString(item.service)}</span>`;
+        if (item.expenseAmount > 0) chipsWrap.innerHTML += `<span class="chip chip-expense">💳 ${Number(item.expenseAmount).toLocaleString()} ${escapeHtmlString(itemExpCurr)}</span>`;
       }
     } else if (!isMemo) {
       if (item.date) chipsWrap.innerHTML += `<span class="chip chip-date">📅 ${escapeHtmlString(item.date)}</span>`;
       if (item.time) chipsWrap.innerHTML += `<span class="chip">⏰ ${escapeHtmlString(item.time)}</span>`;
       if (item.duration) chipsWrap.innerHTML += `<span class="chip">⏳ 체류 ${escapeHtmlString(item.duration)}</span>`;
+      if (item.expenseAmount > 0) chipsWrap.innerHTML += `<span class="chip chip-expense">💳 ${Number(item.expenseAmount).toLocaleString()} ${escapeHtmlString(itemExpCurr)}</span>`;
     }
     if (chipsWrap.children.length > 0) body.appendChild(chipsWrap);
 
-    card.appendChild(body);
-    container.appendChild(card);
-
-    if (!isMemo && idx < currentDay.items.length - 1) {
-      const nextItem = currentDay.items[idx + 1];
-      if (item.lat && item.lng && nextItem.lat && nextItem.lng) {
-        const dist = calcDistance(item.lat, item.lng, nextItem.lat, nextItem.lng).toFixed(1);
-        const connector = document.createElement('div');
-        connector.className = 'distance-connector';
-        connector.innerHTML = `<div class="distance-line"></div><span class="distance-pill">약 ${dist} km</span><a href="https://www.google.com/maps/dir/?api=1&origin=${item.lat},${item.lng}&destination=${nextItem.lat},${nextItem.lng}&travelmode=transit" target="_blank" class="btn-map-guide">길찾기 ↗</a>`;
-        container.appendChild(connector);
-      }
+    if (Array.isArray(item.attachments) && item.attachments.length > 0) {
+      const attachStrip = document.createElement('div');
+      attachStrip.className = 'card-attach-strip';
+      item.attachments.forEach(att => {
+        if (att.kind === 'image' && att.thumbDataUrl) {
+          const thumbImg = document.createElement('img');
+          thumbImg.className = 'card-attach-thumb';
+          thumbImg.src = att.thumbDataUrl;
+          thumbImg.alt = att.name || '바우처 이미지';
+          thumbImg.onclick = (e) => {
+            e.stopPropagation();
+            openAttachmentViewer(att.id);
+          };
+          attachStrip.appendChild(thumbImg);
+        } else {
+          const pdfPill = document.createElement('button');
+          pdfPill.type = 'button';
+          pdfPill.className = 'card-attach-pdf-pill';
+          pdfPill.innerHTML = `📄 <span>${escapeHtmlString(att.name || '바우처.pdf')}</span>`;
+          pdfPill.onclick = (e) => {
+            e.stopPropagation();
+            openAttachmentViewer(att.id);
+          };
+          attachStrip.appendChild(pdfPill);
+        }
+      });
+      body.appendChild(attachStrip);
     }
+
+    card.appendChild(body);
+    slot.appendChild(card);
+    row.appendChild(slot);
+    container.appendChild(row);
   });
 }
 
@@ -2976,22 +3611,207 @@ function deleteItem(itemId) {
   openConfirmModal(
     '일정 삭제',
     hasGroup
-      ? '연결된 숙소 일정(체크인·연박·체크아웃)을 모든 Day에서 함께 삭제하시겠습니까?'
-      : '해당 일정을 삭제하시겠습니까?',
+      ? '연결된 숙소 일정(체크인·연박·체크아웃)과 연동된 가계부 지출을 함께 삭제하시겠습니까?'
+      : '해당 일정을 삭제하시겠습니까? (연동된 가계부 지출 및 첨부파일도 함께 정리됩니다)',
     () => {
+      if (targetItem && Array.isArray(targetItem.attachments)) {
+        targetItem.attachments.forEach(att => deleteAttachmentRecordFromIdb(att.id));
+      }
       if (hasGroup) {
         trip.days.forEach(d => {
           d.items = (d.items || []).filter(i => i.hotelGroupId !== targetItem.hotelGroupId);
         });
+        if (Array.isArray(trip.expenses)) {
+          trip.expenses = trip.expenses.filter(e => e.linkedHotelGroupId !== targetItem.hotelGroupId);
+        }
       } else {
         day.items = day.items.filter(i => i.id !== itemId);
+        if (Array.isArray(trip.expenses)) {
+          trip.expenses = trip.expenses.filter(e => e.linkedItemId !== itemId);
+        }
       }
       saveDataToStorage();
       renderTimeline();
       if (AppData.activeTab === 'map') renderMap();
+      if (AppData.activeTab === 'budget') renderBudget();
       showToast('일정이 삭제되었습니다.');
     }
   );
+}
+
+/* ================= Feature 4: Sort Current Day By Time ================= */
+function getItemSortMinutes(item) {
+  if (!item) return null;
+  if (item.cat === 'memo') return null;
+
+  let timeStr = '';
+  if (item.cat === 'flight') {
+    timeStr = item.depTime || item.arrTime || '';
+  } else if (item.cat === 'hotel') {
+    if (item.hotelRole === 'staying') return 0;
+    if (item.hotelRole === 'checkout') timeStr = item.checkout || '11:00';
+    else timeStr = item.checkin || item.time || '15:00';
+  } else {
+    timeStr = item.time || '';
+  }
+
+  const m = String(timeStr).trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+}
+
+function sortCurrentDayByTime() {
+  const trip = getActiveTrip();
+  if (!trip) return;
+  const day = trip.days[AppData.activeDayIdx];
+  if (!day || !day.items || day.items.length < 2) {
+    showToast('정렬할 일정이 2개 이상이어야 합니다.', 'error');
+    return;
+  }
+
+  const leadingMemos = [];
+  const blocks = [];
+  day.items.forEach((item, originalIdx) => {
+    if (item.cat === 'memo') {
+      if (blocks.length === 0) {
+        leadingMemos.push(item);
+      } else {
+        blocks[blocks.length - 1].memos.push(item);
+      }
+    } else {
+      blocks.push({
+        item,
+        mins: getItemSortMinutes(item),
+        originalIdx,
+        memos: []
+      });
+    }
+  });
+
+  const timedBlocks = blocks.filter(b => b.mins !== null);
+  if (timedBlocks.length < 2) {
+    showToast('시간이 설정된 일정이 2개 이상이어야 시간순으로 정렬할 수 있습니다.', 'error');
+    return;
+  }
+
+  timedBlocks.sort((a, b) => (a.mins - b.mins) || (a.originalIdx - b.originalIdx));
+
+  let tPtr = 0;
+  const sortedBlocks = blocks.map(b => (b.mins !== null ? timedBlocks[tPtr++] : b));
+
+  const result = [...leadingMemos];
+  sortedBlocks.forEach(b => {
+    result.push(b.item, ...b.memos);
+  });
+
+  day.items = result;
+  saveDataToStorage();
+  renderTimeline();
+  if (AppData.activeTab === 'map') renderMap();
+  showToast('🕒 시간순으로 정렬되었습니다! (메모는 해당 일정과 함께 유지)', 'success');
+}
+
+/* ================= Feature 1: Schedule Text Share & Print Overview ================= */
+function buildShareScheduleText(scope = 'day') {
+  const trip = getActiveTrip();
+  if (!trip) return '';
+
+  const lines = [];
+  lines.push(`✈️ [${trip.city || '여행'}] ${trip.title}`);
+  lines.push(`📅 ${trip.startDate} ~ ${trip.endDate}`);
+  lines.push('');
+
+  const targetDays = scope === 'all'
+    ? (trip.days || []).map((d, idx) => ({ day: d, idx }))
+    : (trip.days && trip.days[AppData.activeDayIdx] ? [{ day: trip.days[AppData.activeDayIdx], idx: AppData.activeDayIdx }] : []);
+
+  targetDays.forEach(({ day, idx }) => {
+    lines.push(`━━ Day ${idx + 1}${day.date ? ` (${day.date.slice(5)})` : ''} ━━`);
+    const items = day.items || [];
+    if (items.length === 0) {
+      lines.push('  • 등록된 일정 없음');
+    } else {
+      let stepNum = 1;
+      items.forEach(item => {
+        if (item.cat === 'memo') {
+          lines.push(`  📝 [메모] ${item.name}${item.notes ? ` - ${item.notes.replace(/\n/g, ' ')}` : ''}`);
+        } else if (item.cat === 'flight') {
+          const dep = extractAirportCode(item.depAirport) || '출발';
+          const arr = extractAirportCode(item.arrAirport) || '도착';
+          const timeInfo = `${item.depTime || ''}${item.arrTime ? `→${item.arrTime}` : ''}`;
+          const codeInfo = item.flightCode ? ` (${item.flightCode})` : '';
+          const flightLine = `${stepNum++}. ✈️ ${item.name}${codeInfo} | ${dep}→${arr} ${timeInfo}`.trim();
+          lines.push(`  ${flightLine}`);
+        } else if (item.cat === 'hotel') {
+          const roleText = item.hotelRole === 'checkout'
+            ? `체크아웃 ${item.checkout || '11:00'}`
+            : item.hotelRole === 'staying'
+              ? '연박 중'
+              : `체크인 ${item.checkin || '15:00'} (${item.nights || '1'}박)`;
+          lines.push(`  ${stepNum++}. 🏨 ${item.name} (${roleText})`);
+        } else {
+          const catEmoji = item.cat === 'food' ? '🍴' : item.cat === 'cafe' ? '☕' : item.cat === 'shopping' ? '🛍️' : '📍';
+          const timePart = item.time ? `[${item.time}] ` : '';
+          const notePart = item.notes ? ` (${item.notes.split('\n')[0]})` : '';
+          lines.push(`  ${stepNum++}. ${catEmoji} ${timePart}${item.name}${notePart}`);
+        }
+      });
+    }
+    lines.push('');
+  });
+
+  lines.push('📱 TripNote 여행 수첩에서 작성됨');
+  return lines.join('\n').trim();
+}
+
+function openShareScheduleModal() {
+  const trip = getActiveTrip();
+  if (!trip) return;
+  const dayBtn = document.getElementById('btn-share-scope-day');
+  if (dayBtn) {
+    dayBtn.textContent = `현재 일차만 (Day ${AppData.activeDayIdx + 1})`;
+  }
+  setShareScope('day');
+  openModal('modal-share-schedule');
+}
+
+function setShareScope(scope) {
+  currentShareScope = scope === 'all' ? 'all' : 'day';
+  const dayBtn = document.getElementById('btn-share-scope-day');
+  const allBtn = document.getElementById('btn-share-scope-all');
+  if (dayBtn) dayBtn.classList.toggle('active', currentShareScope === 'day');
+  if (allBtn) allBtn.classList.toggle('active', currentShareScope === 'all');
+
+  const previewEl = document.getElementById('share-schedule-preview');
+  if (previewEl) {
+    previewEl.value = buildShareScheduleText(currentShareScope);
+  }
+}
+
+function copyShareScheduleText() {
+  const previewEl = document.getElementById('share-schedule-preview');
+  if (!previewEl || !previewEl.value) return;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(previewEl.value).then(() => {
+      showToast('📋 일정표가 복사되었습니다! 카카오톡에 바로 붙여넣으세요.', 'success');
+    }).catch(() => {
+      previewEl.select();
+      document.execCommand('copy');
+      showToast('📋 일정표가 클립보드에 복사되었습니다!', 'success');
+    });
+  } else {
+    previewEl.select();
+    document.execCommand('copy');
+    showToast('📋 일정표가 클립보드에 복사되었습니다!', 'success');
+  }
+}
+
+function printScheduleOverview() {
+  closeModal('modal-share-schedule');
+  setTimeout(() => {
+    window.print();
+  }, 200);
 }
 
 /* ================= Route Map Rendering ================= */
@@ -3021,11 +3841,21 @@ function renderMap() {
     const coords = [];
     let seq = 1;
 
+    const pinColors = {
+      flight: '#3A86FF',
+      hotel: '#8338EC',
+      place: '#475569',
+      spot: '#2BCBB3',
+      food: '#FB5607',
+      cafe: '#A47148',
+      shopping: '#EC4899'
+    };
+
     (currentDay.items || []).forEach(item => {
       if (item.lat && item.lng && item.cat !== 'memo') {
         const latLng = [item.lat, item.lng];
         coords.push(latLng);
-        const color = item.cat === 'flight' ? '#3A86FF' : item.cat === 'hotel' ? '#8338EC' : item.cat === 'food' ? '#FB5607' : '#2BCBB3';
+        const color = pinColors[item.cat] || '#2BCBB3';
         const customIcon = L.divIcon({
           className: 'custom-map-pin',
           html: `<div style="background: ${color}; width: 28px; height: 28px; border-radius: 50%; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-size: 12px;">${seq++}</div>`,
@@ -3060,85 +3890,374 @@ function optimizeCurrentDayRoute() {
     showToast('최적화할 일정이 2개 이상이어야 합니다.', 'error');
     return;
   }
-  const items = [...day.items];
-  const geoItems = items.filter(i => i.lat && i.lng && i.cat !== 'memo');
-  if (geoItems.length < 2) {
+
+  const leadingMemos = [];
+  const blocks = [];
+  day.items.forEach(item => {
+    if (item.cat === 'memo') {
+      if (blocks.length === 0) {
+        leadingMemos.push(item);
+      } else {
+        blocks[blocks.length - 1].memos.push(item);
+      }
+    } else {
+      blocks.push({ item, memos: [] });
+    }
+  });
+
+  const geoBlocks = blocks.filter(b => b.item.lat && b.item.lng);
+  if (geoBlocks.length < 2) {
     showToast('좌표가 있는 장소가 2개 이상이어야 동선을 최적화할 수 있습니다.', 'error');
     return;
   }
-  const unvisited = [...geoItems];
+
+  const unvisited = [...geoBlocks];
   const orderedGeo = [unvisited.shift()];
 
   while (unvisited.length > 0) {
-    const current = orderedGeo[orderedGeo.length - 1];
+    const current = orderedGeo[orderedGeo.length - 1].item;
     let nearestIdx = 0, minDist = Infinity;
     for (let i = 0; i < unvisited.length; i++) {
-      const d = calcDistance(current.lat, current.lng, unvisited[i].lat, unvisited[i].lng);
+      const target = unvisited[i].item;
+      const d = calcDistance(current.lat, current.lng, target.lat, target.lng);
       if (d < minDist) { minDist = d; nearestIdx = i; }
     }
     orderedGeo.push(unvisited.splice(nearestIdx, 1)[0]);
   }
 
-  const nonGeoItems = items.filter(i => !i.lat || !i.lng || i.cat === 'memo');
-  day.items = [...orderedGeo, ...nonGeoItems];
+  let gPtr = 0;
+  const finalBlocks = blocks.map(b => (b.item.lat && b.item.lng ? orderedGeo[gPtr++] : b));
+
+  const result = [...leadingMemos];
+  finalBlocks.forEach(b => {
+    result.push(b.item, ...b.memos);
+  });
+
+  day.items = result;
   saveDataToStorage();
   renderTimeline();
   if (AppData.activeTab === 'map') renderMap();
-  showToast('✨ 최단 동선 순서로 재배치되었습니다!', 'success');
+  showToast('✨ 최단 동선 순서로 재배치되었습니다! (메모 위치 유지)', 'success');
 }
 
-/* ================= Budget & Checklist ================= */
+/* ================= Budget (Day Filter, Category Stats & CRUD) ================= */
+const BUDGET_CATEGORY_META = [
+  { key: '식비', icon: '🍴', color: '#FB5607' },
+  { key: '숙박', icon: '🏨', color: '#8338EC' },
+  { key: '교통', icon: '🚕', color: '#3A86FF' },
+  { key: '관광', icon: '🎫', color: '#2BCBB3' },
+  { key: '쇼핑', icon: '🛍️', color: '#EC4899' },
+  { key: '기타', icon: '📌', color: '#64748B' }
+];
+
+function getExpenseDayIndex(trip, expense) {
+  if (!trip || !expense || !Array.isArray(trip.days)) return -1;
+  if (expense.linkedItemId) {
+    const idx = trip.days.findIndex(d => (d.items || []).some(i => i.id === expense.linkedItemId));
+    if (idx !== -1) return idx;
+  }
+  if (expense.linkedHotelGroupId) {
+    const checkinIdx = trip.days.findIndex(d => (d.items || []).some(i => i.hotelGroupId === expense.linkedHotelGroupId && i.hotelRole === 'checkin'));
+    if (checkinIdx !== -1) return checkinIdx;
+    const anyIdx = trip.days.findIndex(d => (d.items || []).some(i => i.hotelGroupId === expense.linkedHotelGroupId));
+    if (anyIdx !== -1) return anyIdx;
+  }
+  if (typeof expense.dayIdx === 'number' && expense.dayIdx >= 0 && expense.dayIdx < trip.days.length) {
+    return expense.dayIdx;
+  }
+  return -1;
+}
+
+function setBudgetDayFilter(filterVal) {
+  budgetDayFilter = filterVal;
+  renderBudget();
+}
+
 function renderBudget() {
   const trip = getActiveTrip();
   if (!trip) return;
   const rate = trip.exchangeRate || 9.1;
   const currency = trip.currency || 'JPY';
-  let foreignTotal = 0, krwTotal = 0;
-  const expenseList = trip.expenses || [];
+  const allExpenses = trip.expenses || [];
+  const days = trip.days || [];
 
-  expenseList.forEach(e => {
-    foreignTotal += Number(e.amount || 0);
-    krwTotal += Math.round(Number(e.amount || 0) * rate);
+  // 일자 필터 유효성 보정
+  if (budgetDayFilter !== 'all' && budgetDayFilter !== 'common') {
+    const numericDay = Number(budgetDayFilter);
+    if (isNaN(numericDay) || numericDay < 0 || numericDay >= days.length) {
+      budgetDayFilter = 'all';
+    }
+  }
+
+  const annotatedExpenses = allExpenses.map((e, originalIdx) => ({
+    expense: e,
+    originalIdx,
+    resolvedDayIdx: getExpenseDayIndex(trip, e)
+  }));
+
+  const hasCommonExpenses = annotatedExpenses.some(x => x.resolvedDayIdx === -1);
+  if (budgetDayFilter === 'common' && !hasCommonExpenses) {
+    budgetDayFilter = 'all';
+  }
+
+  // 상단 일자별 필터 칩 렌더링
+  const dayBarEl = document.getElementById('budget-day-bar');
+  if (dayBarEl) {
+    dayBarEl.replaceChildren();
+
+    const allPill = document.createElement('button');
+    allPill.type = 'button';
+    allPill.className = `budget-day-pill ${budgetDayFilter === 'all' ? 'active' : ''}`;
+    allPill.textContent = `전체 (${allExpenses.length})`;
+    allPill.onclick = () => setBudgetDayFilter('all');
+    dayBarEl.appendChild(allPill);
+
+    days.forEach((d, idx) => {
+      const countForDay = annotatedExpenses.filter(x => x.resolvedDayIdx === idx).length;
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = `budget-day-pill ${budgetDayFilter === idx ? 'active' : ''}`;
+      pill.textContent = `Day ${idx + 1}${countForDay > 0 ? ` (${countForDay})` : ''}`;
+      pill.onclick = () => setBudgetDayFilter(idx);
+      dayBarEl.appendChild(pill);
+    });
+
+    if (hasCommonExpenses) {
+      const commonCount = annotatedExpenses.filter(x => x.resolvedDayIdx === -1).length;
+      const commonPill = document.createElement('button');
+      commonPill.type = 'button';
+      commonPill.className = `budget-day-pill ${budgetDayFilter === 'common' ? 'active' : ''}`;
+      commonPill.textContent = `공통 (${commonCount})`;
+      commonPill.onclick = () => setBudgetDayFilter('common');
+      dayBarEl.appendChild(commonPill);
+    }
+  }
+
+  // 선택된 필터에 따른 지출 내역 필터링
+  const filteredEntries = annotatedExpenses.filter(x => {
+    if (budgetDayFilter === 'all') return true;
+    if (budgetDayFilter === 'common') return x.resolvedDayIdx === -1;
+    return x.resolvedDayIdx === budgetDayFilter;
   });
+
+  let foreignTotal = 0;
+  let krwTotal = 0;
+  const catTotalsKrw = {};
+  BUDGET_CATEGORY_META.forEach(m => { catTotalsKrw[m.key] = 0; });
+
+  filteredEntries.forEach(({ expense }) => {
+    const amt = Number(expense.amount || 0);
+    const expCurr = expense.currency || currency;
+    const krwVal = expCurr === 'KRW' ? Math.round(amt) : Math.round(amt * rate);
+    if (expCurr !== 'KRW') {
+      foreignTotal += amt;
+    }
+    krwTotal += krwVal;
+
+    const catKey = BUDGET_CATEGORY_META.some(m => m.key === expense.category) ? expense.category : '기타';
+    catTotalsKrw[catKey] += krwVal;
+  });
+
+  const scopeLabelEl = document.getElementById('budget-scope-label');
+  if (scopeLabelEl) {
+    if (budgetDayFilter === 'all') scopeLabelEl.textContent = '전체 총 지출 금액';
+    else if (budgetDayFilter === 'common') scopeLabelEl.textContent = '여행 공통 지출 금액';
+    else scopeLabelEl.textContent = `Day ${Number(budgetDayFilter) + 1} 지출 금액`;
+  }
 
   document.getElementById('budget-krw-total').textContent = `₩ ${krwTotal.toLocaleString()}`;
   document.getElementById('budget-curr-total').textContent = `현지 지출: ${foreignTotal.toLocaleString()} ${currency}`;
   document.getElementById('budget-curr-rate').textContent = `적용 환율: 1 ${currency} = ${rate} 원 >`;
 
+  // 카테고리별 통계 카드 렌더링
+  const statsCard = document.getElementById('budget-stats-card');
+  const stackedBar = document.getElementById('budget-stacked-bar');
+  const catGrid = document.getElementById('budget-cat-grid');
+  const statsCount = document.getElementById('budget-stats-count');
+
+  if (statsCard && stackedBar && catGrid) {
+    if (krwTotal > 0 && filteredEntries.length > 0) {
+      statsCard.style.display = 'flex';
+      if (statsCount) statsCount.textContent = `총 ${filteredEntries.length}건`;
+      stackedBar.replaceChildren();
+      catGrid.replaceChildren();
+
+      const activeCats = BUDGET_CATEGORY_META
+        .map(m => ({ ...m, krw: catTotalsKrw[m.key] || 0 }))
+        .filter(m => m.krw > 0)
+        .sort((a, b) => b.krw - a.krw);
+
+      activeCats.forEach(c => {
+        const pct = Math.max(1, Math.round((c.krw / krwTotal) * 100));
+        const seg = document.createElement('div');
+        seg.className = 'budget-stacked-seg';
+        seg.style.width = `${(c.krw / krwTotal) * 100}%`;
+        seg.style.background = c.color;
+        stackedBar.appendChild(seg);
+
+        const itemEl = document.createElement('div');
+        itemEl.className = 'budget-cat-item';
+        itemEl.innerHTML = `
+          <div class="budget-cat-left">
+            <span class="budget-cat-dot" style="background:${c.color};"></span>
+            <span class="budget-cat-name">${c.icon} ${c.key}</span>
+            <span class="budget-cat-pct">${pct}%</span>
+          </div>
+          <span class="budget-cat-amt">₩${c.krw.toLocaleString()}</span>
+        `;
+        catGrid.appendChild(itemEl);
+      });
+    } else {
+      statsCard.style.display = 'none';
+    }
+  }
+
+  const listHeadingEl = document.getElementById('budget-list-heading');
+  if (listHeadingEl) {
+    if (budgetDayFilter === 'all') listHeadingEl.textContent = `전체 경비 내역 (${filteredEntries.length})`;
+    else if (budgetDayFilter === 'common') listHeadingEl.textContent = `공통 경비 내역 (${filteredEntries.length})`;
+    else listHeadingEl.textContent = `Day ${Number(budgetDayFilter) + 1} 경비 내역 (${filteredEntries.length})`;
+  }
+
   const container = document.getElementById('expense-list');
   container.replaceChildren();
 
-  if (expenseList.length === 0) {
+  if (filteredEntries.length === 0) {
     const empty = document.createElement('div');
-    empty.style.cssText = 'text-align: center; color: var(--gray-400); padding: 24px; font-size: 13px;';
-    empty.textContent = '등록된 지출 내역이 없습니다.';
+    empty.style.cssText = 'text-align: center; color: var(--gray-400); padding: 28px 16px; font-size: 13px; background: var(--white); border-radius: 12px; border: 1px dashed var(--gray-200);';
+    empty.textContent = budgetDayFilter === 'all'
+      ? '등록된 지출 내역이 없습니다.'
+      : '해당 일차에 등록된 지출 내역이 없습니다.';
     container.appendChild(empty);
     return;
   }
 
-  expenseList.forEach((e, idx) => {
+  filteredEntries.forEach(({ expense: e, originalIdx, resolvedDayIdx }) => {
+    const isLinked = Boolean(e.linkedItemId || e.linkedHotelGroupId);
+    const linkedBadge = isLinked ? '<span class="budget-linked-tag">📅 일정연동</span>' : '';
+    const dayBadge = resolvedDayIdx >= 0
+      ? `<span class="budget-day-tag">Day ${resolvedDayIdx + 1}</span>`
+      : '<span class="budget-day-tag">공통</span>';
+    const catMeta = BUDGET_CATEGORY_META.find(m => m.key === e.category) || BUDGET_CATEGORY_META[5];
+    const expCurr = e.currency || currency;
+    const isKrw = expCurr === 'KRW';
+    const subAmountText = isKrw ? '원화 결제' : `약 ${(Math.round(e.amount * rate)).toLocaleString()} 원`;
+
     const row = document.createElement('div');
-    row.style.cssText = 'background: var(--white); padding: 12px 14px; border-radius: 10px; border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;';
+    row.className = `budget-expense-row ${!isLinked ? 'editable' : ''}`;
+    row.onclick = (ev) => {
+      if (ev.target.closest('button')) return;
+      if (isLinked) {
+        showToast('일정 카드와 연동된 항목입니다. 일정 탭에서 금액을 수정할 수 있습니다.', 'info');
+      } else {
+        openExpenseEditModal(e.id || originalIdx);
+      }
+    };
+
     row.innerHTML = `
-      <div><div style="font-weight: 700; font-size: 14px;">${escapeHtmlString(e.title)}</div><div style="font-size: 11px; color: var(--gray-400);">${escapeHtmlString(e.category || '기타')}</div></div>
-      <div style="text-align: right; display: flex; align-items: center; gap: 8px;">
-        <div><div style="font-weight: 800; font-size: 14px;">${Number(e.amount).toLocaleString()} ${currency}</div><div style="font-size: 11px; color: var(--gray-600);">약 ${(Math.round(e.amount * rate)).toLocaleString()} 원</div></div>
-        <button class="btn-micro" onclick="deleteExpense(${idx})">✕</button>
+      <div style="min-width: 0; flex: 1;">
+        <div style="font-weight: 700; font-size: 14px; color: var(--dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtmlString(e.title)}${linkedBadge}</div>
+        <div style="font-size: 11px; color: var(--gray-600); margin-top: 3px;">${dayBadge}${catMeta.icon} ${escapeHtmlString(e.category || '기타')}</div>
+      </div>
+      <div style="text-align: right; display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+        <div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--dark);">${Number(e.amount).toLocaleString()} ${escapeHtmlString(expCurr)}</div>
+          <div style="font-size: 11px; color: var(--gray-600);">${subAmountText}</div>
+        </div>
+        <button class="btn-micro" onclick="deleteExpense(${originalIdx})" title="삭제">✕</button>
       </div>`;
     container.appendChild(row);
   });
 }
 
+function populateExpenseDaySelect(trip, selectedDayIdx) {
+  const sel = document.getElementById('expense-day-select');
+  if (!sel) return;
+  sel.replaceChildren();
+
+  const days = (trip && Array.isArray(trip.days)) ? trip.days : [];
+  days.forEach((d, idx) => {
+    const opt = document.createElement('option');
+    opt.value = String(idx);
+    opt.textContent = `Day ${idx + 1}${d.date ? ` (${d.date.slice(5)})` : ''}`;
+    sel.appendChild(opt);
+  });
+
+  const commonOpt = document.createElement('option');
+  commonOpt.value = '-1';
+  commonOpt.textContent = '여행 공통';
+  sel.appendChild(commonOpt);
+
+  if (typeof selectedDayIdx === 'number' && selectedDayIdx >= -1 && selectedDayIdx < days.length) {
+    sel.value = String(selectedDayIdx);
+  } else if (days.length > 0) {
+    sel.value = '0';
+  } else {
+    sel.value = '-1';
+  }
+}
+
+function updateBudgetModalPreview() {
+  const trip = getActiveTrip();
+  const prevEl = document.getElementById('expense-modal-preview');
+  const selEl = document.getElementById('expense-currency-select');
+  const amtEl = document.getElementById('expense-amount');
+  if (!trip || !prevEl || !selEl || !amtEl) return;
+
+  const curr = selEl.value || (trip.currency || 'JPY');
+  const rate = trip.exchangeRate || 9.1;
+  const amt = parseFormattedNumber(amtEl.value);
+
+  if (!isNaN(amt) && amt > 0) {
+    prevEl.textContent = curr === 'KRW'
+      ? `원화 ${Math.round(amt).toLocaleString()} 원 그대로 합산됩니다.`
+      : `약 ${Math.round(amt * rate).toLocaleString()} 원 (적용 환율 ${rate}원)`;
+  } else {
+    prevEl.textContent = curr === 'KRW'
+      ? '원화(KRW) 기준으로 합산됩니다.'
+      : `적용 환율: 1 ${curr} = ${rate} 원`;
+  }
+}
+
 function openExpenseModal() {
   const trip = getActiveTrip();
+  editingExpenseId = null;
+  document.getElementById('expense-modal-title').textContent = '새 지출 내역 등록';
   document.getElementById('expense-title').value = '';
   document.getElementById('expense-amount').value = '';
-  const infoEl = document.getElementById('expense-currency-info');
-  if (infoEl && trip) {
-    const curr = trip.currency || 'JPY';
-    const rate = formatNumberWithCommas(trip.exchangeRate || 9.1);
-    infoEl.value = `${curr} (환율 ${rate}원)`;
-  }
+  document.getElementById('expense-category').value = '식비';
+  const selEl = document.getElementById('expense-currency-select');
+  populateExpenseCurrencySelect(selEl, trip, trip ? trip.currency : 'JPY');
+
+  const defaultDay = typeof budgetDayFilter === 'number'
+    ? budgetDayFilter
+    : (budgetDayFilter === 'common' ? -1 : AppData.activeDayIdx);
+  populateExpenseDaySelect(trip, defaultDay);
+
+  updateBudgetModalPreview();
+  openModal('modal-expense');
+}
+
+function openExpenseEditModal(idOrIdx) {
+  const trip = getActiveTrip();
+  if (!trip || !Array.isArray(trip.expenses)) return;
+  const idx = typeof idOrIdx === 'number'
+    ? idOrIdx
+    : trip.expenses.findIndex(e => e.id === idOrIdx);
+  if (idx === -1 || !trip.expenses[idx]) return;
+
+  const target = trip.expenses[idx];
+  editingExpenseId = target.id || idx;
+  document.getElementById('expense-modal-title').textContent = '지출 내역 수정';
+  document.getElementById('expense-title').value = target.title || '';
+  document.getElementById('expense-amount').value = formatNumberWithCommas(target.amount || '');
+  document.getElementById('expense-category').value = target.category || '식비';
+
+  const selEl = document.getElementById('expense-currency-select');
+  populateExpenseCurrencySelect(selEl, trip, target.currency || (trip ? trip.currency : 'JPY'));
+  populateExpenseDaySelect(trip, getExpenseDayIndex(trip, target));
+
+  updateBudgetModalPreview();
   openModal('modal-expense');
 }
 
@@ -3146,22 +4265,70 @@ function submitExpense() {
   const title = document.getElementById('expense-title').value.trim();
   const amount = parseFormattedNumber(document.getElementById('expense-amount').value);
   const category = document.getElementById('expense-category').value;
-  if (!title || isNaN(amount) || amount <= 0) { showToast('항목명과 올바른 금액을 입력하세요.', 'error'); return; }
   const trip = getActiveTrip();
+  const chosenCurr = document.getElementById('expense-currency-select').value || (trip ? trip.currency : 'JPY');
+  const selectedDayIdx = parseInt(document.getElementById('expense-day-select').value, 10);
+  const validDayIdx = !isNaN(selectedDayIdx) ? selectedDayIdx : -1;
+
+  if (!title || isNaN(amount) || amount <= 0) { showToast('항목명과 올바른 금액을 입력하세요.', 'error'); return; }
   if (!trip.expenses) trip.expenses = [];
-  trip.expenses.push({ id: 'exp_' + Date.now(), title, amount, category });
-  saveDataToStorage();
-  closeModal('modal-expense');
-  renderBudget();
-  showToast('지출이 등록되었습니다.', 'success');
+
+  if (editingExpenseId !== null) {
+    const idx = typeof editingExpenseId === 'number'
+      ? editingExpenseId
+      : trip.expenses.findIndex(e => e.id === editingExpenseId);
+    if (idx !== -1 && trip.expenses[idx]) {
+      trip.expenses[idx].title = title;
+      trip.expenses[idx].amount = amount;
+      trip.expenses[idx].category = category;
+      trip.expenses[idx].currency = chosenCurr;
+      trip.expenses[idx].dayIdx = validDayIdx;
+    }
+    editingExpenseId = null;
+    saveDataToStorage();
+    closeModal('modal-expense');
+    renderBudget();
+    showToast('지출 내역이 수정되었습니다.', 'success');
+  } else {
+    trip.expenses.push({
+      id: 'exp_' + Date.now(),
+      title,
+      amount,
+      category,
+      currency: chosenCurr,
+      dayIdx: validDayIdx
+    });
+    saveDataToStorage();
+    closeModal('modal-expense');
+    renderBudget();
+    showToast('지출이 등록되었습니다.', 'success');
+  }
 }
 
 function deleteExpense(idx) {
   openConfirmModal('지출 내역 삭제', '이 지출 내역을 삭제하시겠습니까?', () => {
     const trip = getActiveTrip();
+    const targetExp = trip.expenses[idx];
+    if (targetExp && Array.isArray(trip.days)) {
+      if (targetExp.linkedItemId) {
+        trip.days.forEach(d => {
+          (d.items || []).forEach(i => {
+            if (i.id === targetExp.linkedItemId) i.expenseAmount = 0;
+          });
+        });
+      }
+      if (targetExp.linkedHotelGroupId) {
+        trip.days.forEach(d => {
+          (d.items || []).forEach(i => {
+            if (i.hotelGroupId === targetExp.linkedHotelGroupId) i.expenseAmount = 0;
+          });
+        });
+      }
+    }
     trip.expenses.splice(idx, 1);
     saveDataToStorage();
     renderBudget();
+    renderTimeline();
     showToast('지출 내역이 삭제되었습니다.');
   });
 }
@@ -3190,6 +4357,14 @@ function renderChecklist() {
   const container = document.getElementById('checklist-items');
   container.replaceChildren();
   const items = trip.checklist || [];
+
+  if (items.length === 0) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'text-align: center; color: var(--gray-400); padding: 32px 16px; font-size: 13px; background: var(--white); border-radius: 12px; border: 1px dashed var(--gray-200); line-height: 1.5;';
+    empty.innerHTML = '등록된 준비물이 없습니다.<br><span style="font-size: 12px;">상단의 <b>[🧳 상시 준비물]</b>에서 기본 준비물을 한 번에 담아보세요!</span>';
+    container.appendChild(empty);
+    return;
+  }
 
   items.forEach((c, idx) => {
     const row = document.createElement('div');
@@ -3319,6 +4494,11 @@ function switchDetailTab(tabName, btn) {
   const fabBtn = document.getElementById('btn-fab-add');
   if (fabBtn) fabBtn.style.display = (tabName === 'timeline') ? 'flex' : 'none';
 
+  const dayBarWrapper = document.querySelector('.day-bar-wrapper');
+  if (dayBarWrapper) {
+    dayBarWrapper.style.display = (tabName === 'timeline' || tabName === 'map') ? 'block' : 'none';
+  }
+
   if (tabName === 'timeline') renderTimeline();
   if (tabName === 'map') renderMap();
   if (tabName === 'budget') renderBudget();
@@ -3342,6 +4522,9 @@ function closeModal(id) {
     if (pickerWrap) pickerWrap.style.display = 'none';
     const candBox = document.getElementById('geo-candidates-box');
     if (candBox) candBox.style.display = 'none';
+  }
+  if (id === 'modal-expense') {
+    editingExpenseId = null;
   }
 }
 
@@ -3582,12 +4765,34 @@ function selectCategoryToAdd(cat) {
 const CATEGORY_MODAL_TITLES = {
   flight: { add: '✈️ 비행기 일정 추가', edit: '✈️ 비행기 일정 수정' },
   hotel: { add: '🏨 숙소 일정 추가', edit: '🏨 숙소 일정 수정' },
-  spot: { add: '📍 관광지 일정 추가', edit: '📍 관광지 일정 수정' },
-  food: { add: '🍴 맛집 일정 추가', edit: '🍴 맛집 일정 수정' },
+  place: { add: '📍 장소 일정 추가', edit: '📍 장소 일정 수정' },
   memo: { add: '📝 메모 추가', edit: '📝 메모 수정' }
 };
 
+function selectPlaceSubtype(subtype) {
+  const valid = ['place', 'spot', 'food', 'cafe', 'shopping'].includes(subtype) ? subtype : 'place';
+  const hiddenEl = document.getElementById('place-subtype');
+  if (hiddenEl) hiddenEl.value = valid;
+
+  document.querySelectorAll('#place-type-chips .place-type-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.ptype === valid);
+  });
+
+  const placeholders = {
+    place: '예: 벳푸역, 렌터카 영업소, 버스터미널',
+    spot: '예: 센소지, 벳푸 지옥온천 순례',
+    food: '예: 이치란 라멘, 시다팰리스 뷔페',
+    cafe: '예: 블루보틀, 유후인 밀히 푸딩',
+    shopping: '예: 돈키호테, 텐진 지하상가'
+  };
+  const nameInput = document.getElementById('item-name');
+  if (nameInput && currentCategory === 'place') {
+    nameInput.placeholder = placeholders[valid] || placeholders.place;
+  }
+}
+
 function restoreCategoryDraft(cat) {
+  const trip = getActiveTrip();
   const d = categoryDrafts[cat] || {};
   document.getElementById('item-name').value = d.name || '';
   document.getElementById('item-notes').value = d.notes || '';
@@ -3608,7 +4813,8 @@ function restoreCategoryDraft(cat) {
     document.getElementById('hotel-breakfast').value = d.breakfast || '조식 포함';
     document.getElementById('hotel-luggage').value = d.luggage || '짐보관 가능';
     syncHotelDatesAndNights('date');
-  } else if (cat === 'spot' || cat === 'food') {
+  } else if (cat === 'place') {
+    selectPlaceSubtype(d.subtype || 'place');
     document.getElementById('item-date').value = d.date || '';
     document.getElementById('item-time').value = d.time || '10:00';
     const durEl = document.getElementById('item-duration');
@@ -3633,13 +4839,27 @@ function restoreCategoryDraft(cat) {
       ? `✓ 저장된 좌표: (${Number(d.lat).toFixed(4)}, ${Number(d.lng).toFixed(4)})`
       : '';
     document.getElementById('geo-status-msg').style.color = 'var(--primary-dark)';
+
+    const currSelectEl = document.getElementById('item-expense-currency');
+    const defaultCurr = d.expenseCurrency || (cat === 'flight' ? 'KRW' : (trip ? trip.currency : 'JPY'));
+    populateExpenseCurrencySelect(currSelectEl, trip, defaultCurr);
+
+    const expEl = document.getElementById('item-expense-amount');
+    if (expEl) {
+      expEl.value = (d.expenseAmount && Number(d.expenseAmount) > 0)
+        ? formatNumberWithCommas(d.expenseAmount)
+        : '';
+    }
+    updateItemExpensePreview();
   }
 }
 
 function openItemModal(mode) {
   AppData.editingItemId = null;
   categoryDrafts = createEmptyCategoryDrafts();
-  const startCat = CATEGORY_MODAL_TITLES[mode] ? mode : 'spot';
+  currentDraftAttachments = [];
+  renderDraftAttachmentPreviews();
+  const startCat = CATEGORY_MODAL_TITLES[mode] ? mode : 'place';
   document.getElementById('modal-item-title').textContent = CATEGORY_MODAL_TITLES[startCat].add;
   applyCategoryForm(startCat);
   openModal('modal-item');
@@ -3654,7 +4874,10 @@ function openItemEditModal(itemId) {
 
   AppData.editingItemId = itemId;
   categoryDrafts = createEmptyCategoryDrafts();
-  const cat = CATEGORY_MODAL_TITLES[item.cat] ? item.cat : 'spot';
+  currentDraftAttachments = Array.isArray(item.attachments) ? item.attachments.map(a => ({ ...a })) : [];
+  renderDraftAttachmentPreviews();
+  const isPlaceSubtype = ['place', 'spot', 'food', 'cafe', 'shopping'].includes(item.cat);
+  const cat = isPlaceSubtype ? 'place' : (CATEGORY_MODAL_TITLES[item.cat] ? item.cat : 'place');
   document.getElementById('modal-item-title').textContent = CATEGORY_MODAL_TITLES[cat].edit;
 
   const d = categoryDrafts[cat];
@@ -3666,6 +4889,8 @@ function openItemEditModal(itemId) {
     d.address = item.address || '';
     d.lat = item.lat || '';
     d.lng = item.lng || '';
+    d.expenseAmount = item.expenseAmount || '';
+    d.expenseCurrency = item.expenseCurrency || (cat === 'flight' ? 'KRW' : (trip.currency || 'JPY'));
 
     if (cat === 'flight') {
       d.date = item.date || currentDay.date || '';
@@ -3686,7 +4911,8 @@ function openItemEditModal(itemId) {
       d.nights = String(n);
       d.breakfast = item.breakfast || '조식 포함';
       d.luggage = item.luggage || '짐보관 가능';
-    } else if (cat === 'spot' || cat === 'food') {
+    } else if (cat === 'place') {
+      d.subtype = isPlaceSubtype ? item.cat : 'place';
       d.date = item.date || currentDay.date || '';
       d.time = item.time || '10:00';
       d.duration = item.duration || '1시간';
@@ -3701,8 +4927,10 @@ function applyCategoryForm(cat) {
   currentCategory = cat;
   document.getElementById('field-flight').style.display = (cat === 'flight') ? 'flex' : 'none';
   document.getElementById('field-hotel').style.display = (cat === 'hotel') ? 'flex' : 'none';
-  document.getElementById('field-general-time').style.display = (cat === 'spot' || cat === 'food') ? 'flex' : 'none';
+  document.getElementById('field-place-type').style.display = (cat === 'place') ? 'flex' : 'none';
+  document.getElementById('field-general-time').style.display = (cat === 'place') ? 'flex' : 'none';
   document.getElementById('field-geo').style.display = (cat === 'memo') ? 'none' : 'flex';
+  document.getElementById('field-expense').style.display = (cat === 'memo') ? 'none' : 'flex';
 
   const noticeBox = document.getElementById('flight-lookup-notice');
   if (noticeBox) noticeBox.style.display = 'none';
@@ -3712,8 +4940,7 @@ function applyCategoryForm(cat) {
   const nameLabels = {
     flight: '일정 제목 (조회 시 자동 입력)',
     hotel: '숙소 이름',
-    spot: '관광지 이름',
-    food: '맛집 이름',
+    place: '장소 이름',
     memo: '메모 제목'
   };
   document.getElementById('lbl-item-name').textContent = nameLabels[cat] || '장소 / 일정 이름';
@@ -3969,7 +5196,7 @@ function loadSampleTokyoTrip() {
         ]
       }
     ],
-    expenses: [{ id: 'exp_1', title: '스카이라이너 왕복권', amount: 4500, category: '교통' }],
+    expenses: [{ id: 'exp_1', title: '스카이라이너 왕복권', amount: 4500, category: '교통', currency: 'JPY', dayIdx: 0 }],
     checklist: [{ text: '여권 (유효기간 6개월 이상)', done: true }, { text: '110V 어댑터', done: true }]
   };
   AppData.trips = [sampleTrip];
@@ -3980,10 +5207,121 @@ function loadSampleTokyoTrip() {
   showToast('도쿄 샘플 여행이 로드되었습니다!');
 }
 
+/* ================= Core Utilities & Storage Loader ================= */
+function formatNumberWithCommas(val) {
+  if (val === null || val === undefined || val === '') return '';
+  const cleaned = String(val).replace(/[^0-9.]/g, '');
+  if (!cleaned) return '';
+  const parts = cleaned.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.length > 1 ? `${parts[0]}.${parts.slice(1).join('')}` : parts[0];
+}
+
+function formatCurrencyInput(el) {
+  if (!el) return;
+  el.value = formatNumberWithCommas(el.value);
+}
+
+function parseFormattedNumber(val) {
+  if (val === null || val === undefined || val === '') return NaN;
+  const cleaned = String(val).replace(/,/g, '').trim();
+  if (!cleaned) return NaN;
+  return parseFloat(cleaned);
+}
+
+function getLocalDateString(dateObj) {
+  const d = dateObj instanceof Date ? dateObj : new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function parseLocalDate(str) {
+  if (!str) return new Date();
+  const parts = String(str).split('-').map(Number);
+  if (parts.length === 3 && !isNaN(parts[0]) && !isNaN(parts[1]) && !isNaN(parts[2])) {
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+  return new Date(str);
+}
+
+function addDaysToDateString(dateStr, daysToAdd) {
+  const base = parseLocalDate(dateStr);
+  base.setDate(base.getDate() + Number(daysToAdd || 0));
+  return getLocalDateString(base);
+}
+
+function getDDayText(startDateStr, endDateStr) {
+  const today = parseLocalDate(getLocalDateString(new Date()));
+  const start = parseLocalDate(startDateStr);
+  const end = parseLocalDate(endDateStr || startDateStr);
+  const diffStart = Math.round((start - today) / (1000 * 60 * 60 * 24));
+  const diffEnd = Math.round((end - today) / (1000 * 60 * 60 * 24));
+
+  if (diffStart > 0) return { text: `D-${diffStart}`, status: 'upcoming' };
+  if (diffStart === 0) return { text: 'D-Day', status: 'ongoing' };
+  if (diffEnd >= 0) return { text: `여행 ${Math.abs(diffStart) + 1}일차`, status: 'ongoing' };
+  return { text: '여행 완료', status: 'past' };
+}
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = deg => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type === 'error' ? 'toast-error' : type === 'success' ? 'toast-success' : ''}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    if (toast.parentNode) toast.parentNode.removeChild(toast);
+  }, 2900);
+}
+
+function loadDataFromStorage() {
+  try {
+    const raw = localStorage.getItem('my_tripnote_app_data');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.trips)) {
+        AppData.trips = parsed.trips;
+        AppData.activeTripId = parsed.activeTripId || (parsed.trips[0] ? parsed.trips[0].id : null);
+        AppData.activeDayIdx = parsed.activeDayIdx || 0;
+        AppData.filter = parsed.filter || 'all';
+      }
+    }
+    const rawMaster = localStorage.getItem('my_tripnote_master_checklist');
+    if (rawMaster) {
+      const parsedMaster = JSON.parse(rawMaster);
+      if (Array.isArray(parsedMaster)) masterChecklist = parsedMaster;
+    } else {
+      masterChecklist = [...DEFAULT_MASTER_CHECKLIST];
+    }
+  } catch (e) {
+    masterChecklist = [...DEFAULT_MASTER_CHECKLIST];
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   setupAppIconsAndManifest();
   registerInlineServiceWorker();
   initPwaInstallPrompt();
+
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(() => {});
+  }
 
   loadDataFromStorage();
   if (!AppData.trips || AppData.trips.length === 0) loadSampleTokyoTrip();
