@@ -758,7 +758,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
         <input type="hidden" id="place-subtype" value="place">
       </div>
 
-      <div class="form-group">
+      <div id="field-item-name" class="form-group">
         <label id="lbl-item-name">장소 / 일정 이름</label>
         <input type="text" id="item-name" class="form-input" placeholder="예: 센소지, 이치란 라멘, 블루보틀">
       </div>
@@ -1909,6 +1909,17 @@ function formatCleanFlightTitle(rawTitle, depCode, arrCode, depCity, arrCity) {
   return rawTitle || '';
 }
 
+function formatFlightRouteTitle(depCode, depTime, arrCode, arrTime, fallbackName) {
+  const dep = extractAirportCode(depCode);
+  const arr = extractAirportCode(arrCode);
+  if (dep || arr) {
+    const left = `${dep || '출발'}${depTime ? ` ${depTime}` : ''}`;
+    const right = `${arr || '도착'}${arrTime ? ` ${arrTime}` : ''}`;
+    return `${left} → ${right}`;
+  }
+  return fallbackName || '항공편';
+}
+
 function createEmptyCategoryDrafts() {
   const trip = getActiveTrip();
   const tripCurr = (trip && trip.currency) ? trip.currency : 'JPY';
@@ -2978,13 +2989,13 @@ async function submitItemForm() {
     const depCity = (categoryDrafts.flight && categoryDrafts.flight.depCity) || '';
     const arrCity = (categoryDrafts.flight && categoryDrafts.flight.arrCity) || '';
 
-    if (!name && depCode && arrCode) {
-      name = (depCity && arrCity) ? `${depCity} → ${arrCity}` : `${depCode} → ${arrCode}`;
+    if (!depCode && !arrCode) {
+      showToast('출발 및 도착 공항코드를 입력해 주세요.', 'error');
+      return;
     }
-    if (!name) { showToast('항공 일정 제목 또는 출·도착 공항코드를 입력해 주세요.', 'error'); return; }
 
     itemObj.date = flightDate;
-    itemObj.name = formatCleanFlightTitle(name, depCode, arrCode, depCity, arrCity);
+    itemObj.name = formatFlightRouteTitle(depCode, depTime, arrCode, arrTime, name);
     itemObj.flightCode = flightCode;
     itemObj.depCity = depCity;
     itemObj.arrCity = arrCity;
@@ -3362,7 +3373,8 @@ function renderDayChips() {
     chip.onclick = () => selectDay(idx);
     chip.appendChild(document.createTextNode(`Day ${idx + 1}`));
     const dateSpan = document.createElement('span');
-    dateSpan.textContent = d.date ? d.date.slice(5) : '';
+    const weekday = d.date ? getKoreanWeekday(d.date) : '';
+    dateSpan.textContent = d.date ? `${d.date.slice(5)}${weekday ? ` ${weekday}` : ''}` : '';
     chip.appendChild(dateSpan);
     dayBar.appendChild(chip);
   });
@@ -3675,7 +3687,9 @@ function renderQuickTargetDaysGrid() {
     const isCurrent = idx === AppData.activeDayIdx;
     const isSelected = idx === quickActionState.targetDayIdx;
     btn.className = `quick-day-btn ${isSelected ? 'selected' : ''} ${isCurrent ? 'current-day' : ''}`;
-    btn.innerHTML = `Day ${idx + 1}<span>${isCurrent ? '현재' : (d.date ? d.date.slice(5) : '')}</span>`;
+    const weekday = d.date ? getKoreanWeekday(d.date) : '';
+    const dateWithDay = d.date ? `${d.date.slice(5)}${weekday ? ` ${weekday}` : ''}` : '';
+    btn.innerHTML = `Day ${idx + 1}<span>${isCurrent ? '현재' : dateWithDay}</span>`;
     btn.onclick = () => {
       quickActionState.targetDayIdx = idx;
       renderQuickTargetDaysGrid();
@@ -3932,12 +3946,12 @@ function renderTimeline() {
     const cardTitle = document.createElement('span');
     cardTitle.className = 'card-title';
     if (isFlight) {
-      cardTitle.textContent = formatCleanFlightTitle(
-        item.name,
-        extractAirportCode(item.depAirport),
-        extractAirportCode(item.arrAirport),
-        item.depCity,
-        item.arrCity
+      cardTitle.textContent = formatFlightRouteTitle(
+        item.depAirport,
+        item.depTime,
+        item.arrAirport,
+        item.arrTime,
+        item.name
       );
     } else {
       cardTitle.textContent = item.name;
@@ -3992,15 +4006,6 @@ function renderTimeline() {
 
     const body = document.createElement('div');
     body.className = 'card-body';
-
-    if (isFlight) {
-      const depCode = extractAirportCode(item.depAirport) || '출발';
-      const arrCode = extractAirportCode(item.arrAirport) || '도착';
-      const flightRoute = document.createElement('div');
-      flightRoute.className = 'card-flight-route';
-      flightRoute.textContent = `${depCode} ${item.depTime || ''} ✈️ ${arrCode} ${item.arrTime || ''}`.trim();
-      body.appendChild(flightRoute);
-    }
 
     if (item.notes) {
       const notesEl = document.createElement('div');
@@ -4203,55 +4208,73 @@ function sortCurrentDayByTime() {
 }
 
 /* ================= Feature 1: Schedule Text Share & Print Overview ================= */
+const NUMBER_EMOJIS = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+
+function getStepNumberEmoji(stepNum) {
+  if (stepNum >= 1 && stepNum <= NUMBER_EMOJIS.length) {
+    return NUMBER_EMOJIS[stepNum - 1];
+  }
+  return `${stepNum}.`;
+}
+
+function getKoreanWeekday(dateStr) {
+  if (!dateStr) return '';
+  const d = parseLocalDate(dateStr);
+  if (isNaN(d.getTime())) return '';
+  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  return days[d.getDay()];
+}
+
 function buildShareScheduleText(scope = 'day') {
   const trip = getActiveTrip();
   if (!trip) return '';
 
   const lines = [];
-  lines.push(`✈️ [${trip.city || '여행'}] ${trip.title}`);
-  lines.push(`📅 ${trip.startDate} ~ ${trip.endDate}`);
-  lines.push('');
+  lines.push(`[${trip.city || '여행'}] ${trip.title}`);
+  lines.push(`${trip.startDate.replace(/-/g, '.')} ~ ${trip.endDate.replace(/-/g, '.')}`);
 
   const targetDays = scope === 'all'
     ? (trip.days || []).map((d, idx) => ({ day: d, idx }))
     : (trip.days && trip.days[AppData.activeDayIdx] ? [{ day: trip.days[AppData.activeDayIdx], idx: AppData.activeDayIdx }] : []);
 
   targetDays.forEach(({ day, idx }) => {
-    lines.push(`━━ Day ${idx + 1}${day.date ? ` (${day.date.slice(5)})` : ''} ━━`);
-    const items = day.items || [];
-    if (items.length === 0) {
-      lines.push('  • 등록된 일정 없음');
-    } else {
-      let stepNum = 1;
-      items.forEach(item => {
-        if (item.cat === 'memo') {
-          lines.push(`  📝 [메모] ${item.name}${item.notes ? ` - ${item.notes.replace(/\n/g, ' ')}` : ''}`);
-        } else if (item.cat === 'flight') {
-          const dep = extractAirportCode(item.depAirport) || '출발';
-          const arr = extractAirportCode(item.arrAirport) || '도착';
-          const timeInfo = `${item.depTime || ''}${item.arrTime ? `→${item.arrTime}` : ''}`;
-          const codeInfo = item.flightCode ? ` (${item.flightCode})` : '';
-          const flightLine = `${stepNum++}. ✈️ ${item.name}${codeInfo} | ${dep}→${arr} ${timeInfo}`.trim();
-          lines.push(`  ${flightLine}`);
-        } else if (item.cat === 'hotel') {
-          const roleText = item.hotelRole === 'checkout'
-            ? `체크아웃 ${item.checkout || '11:00'}`
-            : item.hotelRole === 'staying'
-              ? '연박 중'
-              : `체크인 ${item.checkin || '15:00'} (${item.nights || '1'}박)`;
-          lines.push(`  ${stepNum++}. 🏨 ${item.name} (${roleText})`);
-        } else {
-          const catEmoji = item.cat === 'food' ? '🍴' : item.cat === 'cafe' ? '☕' : item.cat === 'shopping' ? '🛍️' : '📍';
-          const timePart = item.time ? `[${item.time}] ` : '';
-          const notePart = item.notes ? ` (${item.notes.split('\n')[0]})` : '';
-          lines.push(`  ${stepNum++}. ${catEmoji} ${timePart}${item.name}${notePart}`);
-        }
-      });
-    }
     lines.push('');
+    const weekday = day.date ? getKoreanWeekday(day.date) : '';
+    const dateLabel = day.date ? ` (${day.date.slice(5).replace('-', '/')}${weekday ? ` ${weekday}` : ''})` : '';
+    lines.push(`📅 Day ${idx + 1}${dateLabel}`);
+
+    const mainItems = (day.items || []).filter(item => item.cat !== 'memo');
+    if (mainItems.length === 0) {
+      lines.push('  · 등록된 일정 없음');
+      return;
+    }
+
+    mainItems.forEach((item, i) => {
+      const numBadge = getStepNumberEmoji(i + 1);
+
+      if (item.cat === 'flight') {
+        const dep = extractAirportCode(item.depAirport) || '출발';
+        const arr = extractAirportCode(item.arrAirport) || '도착';
+        const timeHead = item.depTime || '항공';
+        const arrPart = item.arrTime ? ` (~${item.arrTime})` : '';
+        const codePart = item.flightCode ? ` [${item.flightCode}]` : '';
+        lines.push(`${numBadge} ${timeHead}  ${dep} → ${arr}${arrPart}${codePart}`);
+      } else if (item.cat === 'hotel') {
+        if (item.hotelRole === 'checkout') {
+          lines.push(`${numBadge} ${item.checkout || '11:00'}  ${item.name} (체크아웃)`);
+        } else if (item.hotelRole === 'staying') {
+          lines.push(`${numBadge} 연박  ${item.name}`);
+        } else {
+          lines.push(`${numBadge} ${item.checkin || '15:00'}  ${item.name} (체크인 · ${item.nights || '1'}박)`);
+        }
+      } else {
+        const timeHead = item.time || '일정';
+        const durPart = item.duration ? ` (${item.duration})` : '';
+        lines.push(`${numBadge} ${timeHead}  ${item.name}${durPart}`);
+      }
+    });
   });
 
-  lines.push('📱 TripNote 여행 수첩에서 작성됨');
   return lines.join('\n').trim();
 }
 
@@ -4340,13 +4363,15 @@ function renderPrintOverview(scope = 'all') {
         } else if (item.cat === 'flight') {
           const dep = extractAirportCode(item.depAirport) || '출발';
           const arr = extractAirportCode(item.arrAirport) || '도착';
-          const timeInfo = `${item.depTime || ''}${item.arrTime ? ` → ${item.arrTime}` : ''}`;
-          const codeInfo = item.flightCode ? `편명 ${escapeHtmlString(item.flightCode)} · ` : '';
+          const routeTitle = formatFlightRouteTitle(dep, item.depTime, arr, item.arrTime, item.name);
+          const metaParts = [];
+          if (item.flightCode) metaParts.push(`편명 ${item.flightCode}`);
+          if (item.depCity && item.arrCity) metaParts.push(`${item.depCity} → ${item.arrCity}`);
           row.innerHTML = `
             <div class="print-item-num">${stepNum++}</div>
             <div class="print-item-body">
-              <div class="print-item-title">✈️ ${escapeHtmlString(item.name)}</div>
-              <div class="print-item-meta">${codeInfo}${escapeHtmlString(dep)} → ${escapeHtmlString(arr)} ${escapeHtmlString(timeInfo)}</div>
+              <div class="print-item-title">✈️ ${escapeHtmlString(routeTitle)}</div>
+              ${metaParts.length > 0 ? `<div class="print-item-meta">${escapeHtmlString(metaParts.join(' · '))}</div>` : ''}
               ${item.notes ? `<div class="print-item-note">${escapeHtmlString(item.notes)}</div>` : ''}
             </div>
           `;
@@ -5516,6 +5541,7 @@ function applyCategoryForm(cat) {
   document.getElementById('field-flight').style.display = (cat === 'flight') ? 'flex' : 'none';
   document.getElementById('field-hotel').style.display = (cat === 'hotel') ? 'flex' : 'none';
   document.getElementById('field-place-type').style.display = (cat === 'place') ? 'flex' : 'none';
+  document.getElementById('field-item-name').style.display = (cat === 'flight') ? 'none' : 'flex';
   document.getElementById('field-general-time').style.display = (cat === 'place') ? 'flex' : 'none';
   document.getElementById('field-geo').style.display = (cat === 'memo') ? 'none' : 'flex';
   document.getElementById('field-expense').style.display = (cat === 'memo') ? 'none' : 'flex';
@@ -5526,7 +5552,6 @@ function applyCategoryForm(cat) {
   if (candBox) candBox.style.display = 'none';
 
   const nameLabels = {
-    flight: '일정 제목 (조회 시 자동 입력)',
     hotel: '숙소 이름',
     place: '장소 이름',
     memo: '메모 제목'
@@ -5757,7 +5782,7 @@ function loadSampleTokyoTrip() {
         dayNum: 1,
         date: '2026-11-20',
         items: [
-          { id: 'item_1', cat: 'flight', date: '2026-11-20', name: 'Seoul → Tokyo', flightCode: 'KE703', depCity: 'Seoul', arrCity: 'Tokyo', depAirport: 'ICN', arrAirport: 'NRT', depTime: '10:10', arrTime: '12:40', lat: 35.7720, lng: 140.3929, notes: '모바일 탑승권 완료' },
+          { id: 'item_1', cat: 'flight', date: '2026-11-20', name: 'ICN 10:10 → NRT 12:40', flightCode: 'KE703', depCity: 'Seoul', arrCity: 'Tokyo', depAirport: 'ICN', arrAirport: 'NRT', depTime: '10:10', arrTime: '12:40', lat: 35.7720, lng: 140.3929, notes: '모바일 탑승권 완료' },
           { id: 'item_2', cat: 'memo', name: '스카이라이너 티켓 교환 안내', notes: '나리타공항 지하 1층 게이세이 센터 교환' },
           { id: 'item_3', hotelGroupId: 'hotel_grp_sample', hotelRole: 'checkin', cat: 'hotel', name: '호텔 그레이스리 신주쿠', address: '1-19-1 Kabukicho, Shinjuku-ku, Tokyo', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
         ]
