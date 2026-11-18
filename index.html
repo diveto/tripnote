@@ -105,10 +105,10 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .empty-desc { font-size: 13px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.4; }
 .btn-create-primary { background: var(--primary); color: var(--white); border: none; padding: 12px 24px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(43,203,179,0.3); }
 
-.detail-nav-bar { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%); }
-.btn-nav-back { background: rgba(0,0,0,0.4); border: none; color: var(--white); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; backdrop-filter: blur(4px); }
-.detail-nav-actions { display: flex; gap: 6px; }
-.btn-nav-chip { background: rgba(0,0,0,0.4); border: none; color: var(--white); padding: 6px 11px; border-radius: 18px; font-size: 12px; font-weight: 600; cursor: pointer; backdrop-filter: blur(4px); }
+.detail-nav-bar { position: absolute; top: 0; left: 0; right: 0; height: 56px; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: 0 14px; background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%); }
+.btn-nav-back { background: rgba(0,0,0,0.4); border: none; color: var(--white); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; backdrop-filter: blur(4px); flex-shrink: 0; }
+.detail-nav-actions { display: flex; gap: 6px; flex-wrap: nowrap; }
+.btn-nav-chip { background: rgba(0,0,0,0.42); border: none; color: var(--white); padding: 6px 11px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; backdrop-filter: blur(4px); white-space: nowrap; }
 
 .detail-hero { position: relative; height: 250px; background-color: #1f7a6d; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; color: var(--white); }
 .detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%); }
@@ -120,9 +120,10 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .day-bar-wrapper { background: var(--white); padding: 12px 16px; border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; z-index: 30; }
 .day-bar { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
 .day-bar::-webkit-scrollbar { display: none; }
-.day-chip { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; background: var(--gray-100); border: 1px solid var(--gray-200); font-size: 13px; font-weight: 700; color: var(--gray-600); cursor: pointer; display: flex; flex-direction: column; align-items: center; min-width: 68px; }
+.day-chip { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; background: var(--gray-100); border: 1px solid var(--gray-200); font-size: 13px; font-weight: 700; color: var(--gray-600); cursor: pointer; display: flex; flex-direction: column; align-items: center; min-width: 68px; transition: transform 0.15s, background 0.15s, border-color 0.15s; }
 .day-chip span { font-size: 10px; font-weight: 500; opacity: 0.7; }
 .day-chip.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+.day-chip.drag-over-target { background: var(--blue) !important; color: var(--white) !important; border-color: var(--blue) !important; transform: scale(1.08); box-shadow: 0 4px 12px rgba(58,134,255,0.38); }
 .btn-add-day { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: var(--gray-100); border: 1px dashed var(--gray-400); font-size: 18px; color: var(--gray-600); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
 .tab-content { display: none; padding: 16px 16px 60px; flex-direction: column; gap: 14px; }
@@ -136,7 +137,9 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 
 /* ================= Continuous Vertical Timeline Track & Cards ================= */
 .timeline-list { display: flex; flex-direction: column; position: relative; }
-.timeline-row { display: flex; align-items: stretch; gap: 10px; position: relative; margin: 0; }
+.timeline-row { display: flex; align-items: stretch; gap: 10px; position: relative; margin: 0; transition: transform 0.15s; }
+.timeline-row.drop-before::before { content: ""; position: absolute; top: -4px; left: 38px; right: 0; height: 3.5px; background: var(--blue); border-radius: 4px; z-index: 15; box-shadow: 0 0 8px rgba(58,134,255,0.6); }
+.timeline-row.drop-after::after { content: ""; position: absolute; bottom: 6px; left: 38px; right: 0; height: 3.5px; background: var(--blue); border-radius: 4px; z-index: 15; box-shadow: 0 0 8px rgba(58,134,255,0.6); }
 .timeline-rail { width: 28px; flex-shrink: 0; position: relative; display: flex; flex-direction: column; align-items: center; }
 .timeline-rail-top { width: 2.5px; height: 22px; background: #cfd8dc; flex-shrink: 0; }
 .timeline-rail-top.hidden { background: transparent; }
@@ -155,9 +158,24 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 
 .timeline-card-slot { flex: 1; min-width: 0; padding-bottom: 12px; display: flex; flex-direction: column; }
 .timeline-row:last-child .timeline-card-slot { padding-bottom: 0; }
-.timeline-card { background: var(--white); border-radius: var(--radius); padding: 14px 15px; box-shadow: var(--shadow); border: 1px solid var(--gray-200); position: relative; cursor: pointer; }
+.timeline-card { background: var(--white); border-radius: var(--radius); padding: 14px 15px; box-shadow: var(--shadow); border: 1px solid var(--gray-200); position: relative; cursor: pointer; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s, border-color 0.15s; }
 .timeline-card:active { transform: scale(0.99); }
 .timeline-card.memo-card { background: #FFFDF0; border-color: #FFEAA7; }
+.timeline-card.long-pressing { transform: scale(1.02); border-color: var(--primary); box-shadow: 0 8px 24px rgba(43,203,179,0.28); z-index: 10; touch-action: none; }
+.timeline-card.dragging-source { opacity: 0.42; border: 1.5px dashed var(--blue); touch-action: none; }
+
+.drag-ghost-pill { position: fixed; z-index: 9999; pointer-events: none; background: rgba(34, 34, 34, 0.92); color: #fff; padding: 9px 15px; border-radius: 22px; font-size: 13px; font-weight: 800; box-shadow: 0 10px 26px rgba(0,0,0,0.3); max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transform: translate(-50%, -125%); backdrop-filter: blur(4px); border: 1.5px solid var(--primary); }
+
+/* Long-press Quick Action Modal Controls */
+.quick-day-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.quick-day-btn { padding: 8px 4px; border-radius: 10px; border: 1px solid var(--gray-200); background: var(--gray-100); color: var(--gray-800); font-size: 12px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.quick-day-btn span { font-size: 10px; font-weight: 500; opacity: 0.72; }
+.quick-day-btn.selected { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+.quick-day-btn.current-day { opacity: 0.55; }
+.quick-order-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.quick-order-btn { padding: 9px 4px; border-radius: 10px; border: 1px solid var(--gray-200); background: var(--white); color: var(--dark); font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: center; }
+.quick-order-btn:active { background: var(--gray-100); }
+.quick-order-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 6px; }
 .card-title-wrap { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
 .card-memo-icon { font-size: 15px; flex-shrink: 0; }
@@ -1081,6 +1099,37 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
   </div>
 </div>
 
+<!-- 일정 길게 누르기 빠른 작업 모달 (순서 변경 · 다른 날짜 이동/복사) -->
+<div id="modal-item-quick-actions" class="modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <h3 id="quick-action-item-title" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:85%;">일정 이동 · 복사 · 순서</h3>
+      <button class="modal-close" onclick="closeModal('modal-item-quick-actions')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label id="quick-order-label">현재 날짜 내 순서 변경</label>
+        <div class="quick-order-grid">
+          <button type="button" id="btn-quick-move-top" class="quick-order-btn" onclick="quickReorderCurrentItem('top')">⏫ 맨 위로</button>
+          <button type="button" id="btn-quick-move-up" class="quick-order-btn" onclick="quickReorderCurrentItem('up')">▲ 위로</button>
+          <button type="button" id="btn-quick-move-down" class="quick-order-btn" onclick="quickReorderCurrentItem('down')">▼ 아래로</button>
+          <button type="button" id="btn-quick-move-bottom" class="quick-order-btn" onclick="quickReorderCurrentItem('bottom')">⏬ 맨 아래</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="padding-top: 6px; border-top: 1px solid var(--gray-200);">
+        <label>이동 또는 복사할 대상 날짜 선택</label>
+        <div id="quick-target-days-grid" class="quick-day-grid"></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 2px;">
+        <button type="button" id="btn-quick-move-day" class="btn-full btn-primary" onclick="executeQuickMoveOrCopy('move')">➡️ 선택한 날짜로 이동</button>
+        <button type="button" id="btn-quick-copy-day" class="btn-full btn-sub" style="border: 1px solid var(--primary); color: var(--primary-dark);" onclick="executeQuickMoveOrCopy('copy')">📑 선택한 날짜로 복사</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast-container"></div>
 
 <script>
@@ -1476,7 +1525,7 @@ let editingExpenseId = null;
 let currentDraftAttachments = [];
 const attachmentMemoryCache = new Map();
 let activeViewerObjectUrl = null;
-// ... existing code ... -->
+
 function openAviationIdb() {
   if (aviationDbPromise) return aviationDbPromise;
   aviationDbPromise = new Promise((resolve, reject) => {
@@ -1597,8 +1646,24 @@ async function getAttachmentRecordFromIdb(attId) {
   }
 }
 
+function isAttachmentStillReferenced(attId) {
+  if (!attId || !Array.isArray(AppData.trips)) return false;
+  for (const t of AppData.trips) {
+    if (!Array.isArray(t.days)) continue;
+    for (const d of t.days) {
+      if (!Array.isArray(d.items)) continue;
+      for (const it of d.items) {
+        if (Array.isArray(it.attachments) && it.attachments.some(a => a.id === attId)) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 async function deleteAttachmentRecordFromIdb(attId) {
-  if (!attId) return;
+  if (!attId || isAttachmentStillReferenced(attId)) return;
   attachmentMemoryCache.delete(attId);
   try {
     const db = await openAviationIdb();
@@ -3266,6 +3331,7 @@ function renderDayChips() {
   trip.days.forEach((d, idx) => {
     const chip = document.createElement('div');
     chip.className = `day-chip ${idx === AppData.activeDayIdx ? 'active' : ''}`;
+    chip.dataset.dayIdx = String(idx);
     chip.onclick = () => selectDay(idx);
     chip.appendChild(document.createTextNode(`Day ${idx + 1}`));
     const dateSpan = document.createElement('span');
@@ -3312,7 +3378,7 @@ function addNewDay() {
   showToast(`Day ${nextDayNum} 일정이 추가되었습니다.`);
 }
 
-/* ================= Continuous Vertical Timeline Rendering ================= */
+/* ================= Continuous Vertical Timeline Rendering & Long-Press Gestures ================= */
 const PLACE_BADGE_LABELS = {
   flight: '비행기',
   hotel: '숙소',
@@ -3323,6 +3389,397 @@ const PLACE_BADGE_LABELS = {
   shopping: '쇼핑',
   memo: '메모'
 };
+
+let suppressNextCardClick = false;
+let quickActionState = { itemId: null, targetDayIdx: 0 };
+let activeDragState = null;
+
+function clearDragVisualIndicators() {
+  document.querySelectorAll('.timeline-row').forEach(r => {
+    r.classList.remove('drop-before', 'drop-after');
+  });
+  document.querySelectorAll('.day-chip').forEach(c => {
+    c.classList.remove('drag-over-target');
+  });
+  document.querySelectorAll('.timeline-card').forEach(c => {
+    c.classList.remove('long-pressing', 'dragging-source');
+  });
+  if (activeDragState && activeDragState.ghostEl) {
+    activeDragState.ghostEl.remove();
+  }
+}
+
+function attachLongPressAndDragToCard(cardEl, rowEl, item, itemIdx) {
+  let pressTimer = null;
+  let startX = 0;
+  let startY = 0;
+  let pointerId = null;
+  let longPressActivated = false;
+  let draggingStarted = false;
+
+  const removeGlobalListeners = () => {
+    window.removeEventListener('pointermove', onWindowPointerMove);
+    window.removeEventListener('pointerup', onWindowPointerUp);
+    window.removeEventListener('pointercancel', onWindowPointerCancel);
+    window.removeEventListener('touchmove', onWindowTouchMove);
+  };
+
+  const cancelPendingTimer = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+    cardEl.classList.remove('long-pressing');
+  };
+
+  const onWindowTouchMove = (e) => {
+    if (longPressActivated && e.cancelable) {
+      e.preventDefault();
+    }
+  };
+
+  const onWindowPointerMove = (e) => {
+    if (pointerId !== e.pointerId) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    if (!longPressActivated) {
+      if (Math.hypot(dx, dy) > 10) {
+        cancelPendingTimer();
+        removeGlobalListeners();
+        pointerId = null;
+      }
+      return;
+    }
+
+    if (!draggingStarted && Math.hypot(dx, dy) > 8) {
+      draggingStarted = true;
+      cardEl.classList.remove('long-pressing');
+      cardEl.classList.add('dragging-source');
+
+      const ghost = document.createElement('div');
+      ghost.className = 'drag-ghost-pill';
+      ghost.textContent = `✋ ${item.name}`;
+      ghost.style.left = `${e.clientX}px`;
+      ghost.style.top = `${e.clientY}px`;
+      document.body.appendChild(ghost);
+
+      activeDragState = {
+        sourceIdx: itemIdx,
+        itemId: item.id,
+        ghostEl: ghost,
+        dropTargetIdx: itemIdx,
+        dropPosition: 'before',
+        hoverDayIdx: null
+      };
+    }
+
+    if (draggingStarted && activeDragState) {
+      if (e.cancelable) e.preventDefault();
+      if (activeDragState.ghostEl) {
+        activeDragState.ghostEl.style.left = `${e.clientX}px`;
+        activeDragState.ghostEl.style.top = `${e.clientY}px`;
+      }
+
+      document.querySelectorAll('.timeline-row').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+      document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('drag-over-target'));
+      activeDragState.hoverDayIdx = null;
+      activeDragState.dropTargetIdx = null;
+
+      const elUnder = document.elementFromPoint(e.clientX, e.clientY);
+      const dayChip = elUnder ? elUnder.closest('.day-chip') : null;
+      if (dayChip && dayChip.dataset.dayIdx !== undefined) {
+        const dIdx = parseInt(dayChip.dataset.dayIdx, 10);
+        if (!isNaN(dIdx) && dIdx !== AppData.activeDayIdx) {
+          dayChip.classList.add('drag-over-target');
+          activeDragState.hoverDayIdx = dIdx;
+          return;
+        }
+      }
+
+      const targetRow = elUnder ? elUnder.closest('.timeline-row') : null;
+      if (targetRow && targetRow.dataset.itemIdx !== undefined) {
+        const tIdx = parseInt(targetRow.dataset.itemIdx, 10);
+        if (!isNaN(tIdx) && tIdx !== itemIdx) {
+          const rect = targetRow.getBoundingClientRect();
+          const isBottomHalf = e.clientY > rect.top + rect.height / 2;
+          targetRow.classList.add(isBottomHalf ? 'drop-after' : 'drop-before');
+          activeDragState.dropTargetIdx = tIdx;
+          activeDragState.dropPosition = isBottomHalf ? 'after' : 'before';
+        }
+      }
+    }
+  };
+
+  const onWindowPointerUp = (e) => {
+    if (pointerId !== e.pointerId) return;
+    cancelPendingTimer();
+    removeGlobalListeners();
+
+    if (longPressActivated) {
+      if (draggingStarted && activeDragState) {
+        const { sourceIdx, hoverDayIdx, dropTargetIdx, dropPosition } = activeDragState;
+        clearDragVisualIndicators();
+        activeDragState = null;
+
+        if (hoverDayIdx !== null && hoverDayIdx !== AppData.activeDayIdx) {
+          moveOrCopyItemToAnotherDay(item.id, hoverDayIdx, 'move');
+        } else if (dropTargetIdx !== null && dropTargetIdx !== sourceIdx) {
+          reorderItemToIndex(sourceIdx, dropTargetIdx, dropPosition);
+        }
+      } else {
+        clearDragVisualIndicators();
+        openItemQuickActionsModal(item.id);
+      }
+
+      setTimeout(() => { suppressNextCardClick = false; }, 120);
+    }
+
+    pointerId = null;
+    longPressActivated = false;
+    draggingStarted = false;
+  };
+
+  const onWindowPointerCancel = (e) => {
+    if (pointerId !== e.pointerId) return;
+    cancelPendingTimer();
+    removeGlobalListeners();
+    clearDragVisualIndicators();
+    activeDragState = null;
+    pointerId = null;
+    longPressActivated = false;
+    draggingStarted = false;
+    setTimeout(() => { suppressNextCardClick = false; }, 120);
+  };
+
+  cardEl.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+
+  cardEl.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (e.target.closest('.card-btns') || e.target.closest('.btn-map-guide') || e.target.closest('.card-attach-strip')) {
+      return;
+    }
+
+    cancelPendingTimer();
+    removeGlobalListeners();
+
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    startY = e.clientY;
+    longPressActivated = false;
+    draggingStarted = false;
+
+    window.addEventListener('pointermove', onWindowPointerMove, { passive: false });
+    window.addEventListener('pointerup', onWindowPointerUp);
+    window.addEventListener('pointercancel', onWindowPointerCancel);
+    window.addEventListener('touchmove', onWindowTouchMove, { passive: false });
+
+    pressTimer = setTimeout(() => {
+      longPressActivated = true;
+      suppressNextCardClick = true;
+      cardEl.classList.add('long-pressing');
+      if (navigator.vibrate) {
+        try { navigator.vibrate(35); } catch (err) {}
+      }
+    }, 380);
+  });
+}
+
+function reorderItemToIndex(fromIdx, targetIdx, position = 'before') {
+  const trip = getActiveTrip();
+  if (!trip) return;
+  const items = trip.days[AppData.activeDayIdx].items;
+  if (!Array.isArray(items) || fromIdx < 0 || fromIdx >= items.length) return;
+
+  const [moved] = items.splice(fromIdx, 1);
+  let insertIdx = targetIdx;
+  if (fromIdx < targetIdx) insertIdx -= 1;
+  if (position === 'after') insertIdx += 1;
+  insertIdx = Math.max(0, Math.min(items.length, insertIdx));
+
+  items.splice(insertIdx, 0, moved);
+  saveDataToStorage();
+  renderTimeline();
+  if (AppData.activeTab === 'map') renderMap();
+  showToast('일정 순서가 변경되었습니다.', 'success');
+}
+
+function openItemQuickActionsModal(itemId) {
+  const trip = getActiveTrip();
+  if (!trip) return;
+  const currentDay = trip.days[AppData.activeDayIdx];
+  const items = currentDay ? (currentDay.items || []) : [];
+  const itemIdx = items.findIndex(i => i.id === itemId);
+  if (itemIdx === -1) return;
+
+  const item = items[itemIdx];
+  const defaultTargetDay = trip.days.length > 1
+    ? (AppData.activeDayIdx === 0 ? 1 : 0)
+    : 0;
+
+  quickActionState = {
+    itemId,
+    targetDayIdx: defaultTargetDay
+  };
+
+  document.getElementById('quick-action-item-title').textContent = `📋 ${item.name}`;
+  document.getElementById('quick-order-label').textContent = `Day ${AppData.activeDayIdx + 1} 내 순서 변경 (${itemIdx + 1} / ${items.length}번째)`;
+
+  document.getElementById('btn-quick-move-top').disabled = (itemIdx === 0);
+  document.getElementById('btn-quick-move-up').disabled = (itemIdx === 0);
+  document.getElementById('btn-quick-move-down').disabled = (itemIdx === items.length - 1);
+  document.getElementById('btn-quick-move-bottom').disabled = (itemIdx === items.length - 1);
+
+  renderQuickTargetDaysGrid();
+  openModal('modal-item-quick-actions');
+}
+
+function renderQuickTargetDaysGrid() {
+  const trip = getActiveTrip();
+  const grid = document.getElementById('quick-target-days-grid');
+  if (!trip || !grid) return;
+  grid.replaceChildren();
+
+  (trip.days || []).forEach((d, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    const isCurrent = idx === AppData.activeDayIdx;
+    const isSelected = idx === quickActionState.targetDayIdx;
+    btn.className = `quick-day-btn ${isSelected ? 'selected' : ''} ${isCurrent ? 'current-day' : ''}`;
+    btn.innerHTML = `Day ${idx + 1}<span>${isCurrent ? '현재' : (d.date ? d.date.slice(5) : '')}</span>`;
+    btn.onclick = () => {
+      quickActionState.targetDayIdx = idx;
+      renderQuickTargetDaysGrid();
+    };
+    grid.appendChild(btn);
+  });
+
+  const moveBtn = document.getElementById('btn-quick-move-day');
+  if (moveBtn) {
+    moveBtn.disabled = (quickActionState.targetDayIdx === AppData.activeDayIdx);
+    moveBtn.style.opacity = (quickActionState.targetDayIdx === AppData.activeDayIdx) ? '0.45' : '1';
+  }
+}
+
+function quickReorderCurrentItem(direction) {
+  const trip = getActiveTrip();
+  if (!trip) return;
+  const items = trip.days[AppData.activeDayIdx].items;
+  const idx = items.findIndex(i => i.id === quickActionState.itemId);
+  if (idx === -1) return;
+
+  if (direction === 'top' && idx > 0) {
+    const [moved] = items.splice(idx, 1);
+    items.unshift(moved);
+  } else if (direction === 'up' && idx > 0) {
+    [items[idx - 1], items[idx]] = [items[idx], items[idx - 1]];
+  } else if (direction === 'down' && idx < items.length - 1) {
+    [items[idx + 1], items[idx]] = [items[idx], items[idx + 1]];
+  } else if (direction === 'bottom' && idx < items.length - 1) {
+    const [moved] = items.splice(idx, 1);
+    items.push(moved);
+  } else {
+    return;
+  }
+
+  saveDataToStorage();
+  renderTimeline();
+  if (AppData.activeTab === 'map') renderMap();
+  openItemQuickActionsModal(quickActionState.itemId);
+  showToast('순서가 변경되었습니다.', 'success');
+}
+
+function cloneItemForTargetDay(sourceItem, targetDate) {
+  const cloned = JSON.parse(JSON.stringify(sourceItem));
+  cloned.id = 'item_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+  if (cloned.cat === 'hotel') {
+    delete cloned.hotelGroupId;
+    delete cloned.hotelRole;
+    if (targetDate) {
+      cloned.checkinDate = targetDate;
+      const n = Math.max(1, parseInt(cloned.nights || '1', 10) || 1);
+      cloned.checkoutDate = addDaysToDateString(targetDate, n);
+    }
+  } else if (targetDate && cloned.date) {
+    cloned.date = targetDate;
+  }
+  return cloned;
+}
+
+function moveOrCopyItemToAnotherDay(itemId, targetDayIdx, mode = 'move') {
+  const trip = getActiveTrip();
+  if (!trip || !trip.days || !trip.days[targetDayIdx]) return;
+
+  const sourceDay = trip.days[AppData.activeDayIdx];
+  const targetDay = trip.days[targetDayIdx];
+  const srcIdx = (sourceDay.items || []).findIndex(i => i.id === itemId);
+  if (srcIdx === -1) return;
+
+  if (mode === 'move' && targetDayIdx === AppData.activeDayIdx) {
+    showToast('이미 현재 날짜에 있는 일정입니다.', 'info');
+    return;
+  }
+
+  const originalItem = sourceDay.items[srcIdx];
+  if (!targetDay.items) targetDay.items = [];
+
+  if (mode === 'move') {
+    sourceDay.items.splice(srcIdx, 1);
+    if (originalItem.cat === 'hotel') {
+      delete originalItem.hotelGroupId;
+      delete originalItem.hotelRole;
+      if (targetDay.date) {
+        originalItem.checkinDate = targetDay.date;
+        const n = Math.max(1, parseInt(originalItem.nights || '1', 10) || 1);
+        originalItem.checkoutDate = addDaysToDateString(targetDay.date, n);
+      }
+    } else if (targetDay.date && originalItem.date) {
+      originalItem.date = targetDay.date;
+    }
+    targetDay.items.push(originalItem);
+
+    if (Array.isArray(trip.expenses)) {
+      const linkedExp = trip.expenses.find(e => e.linkedItemId === originalItem.id);
+      if (linkedExp) linkedExp.dayIdx = targetDayIdx;
+    }
+
+    saveDataToStorage();
+    renderTimeline();
+    if (AppData.activeTab === 'map') renderMap();
+    if (AppData.activeTab === 'budget') renderBudget();
+    showToast(`➡️ [${originalItem.name}] 일정을 Day ${targetDayIdx + 1}로 이동했습니다!`, 'success');
+  } else {
+    const copiedItem = cloneItemForTargetDay(originalItem, targetDay.date);
+    targetDay.items.push(copiedItem);
+
+    if (copiedItem.expenseAmount > 0) {
+      syncLinkedExpenseForItem(
+        trip,
+        'linkedItemId',
+        copiedItem.id,
+        copiedItem.name,
+        copiedItem.expenseAmount,
+        copiedItem.cat,
+        copiedItem.expenseCurrency || trip.currency || 'JPY',
+        targetDayIdx
+      );
+    }
+
+    saveDataToStorage();
+    renderTimeline();
+    if (AppData.activeTab === 'map') renderMap();
+    if (AppData.activeTab === 'budget') renderBudget();
+    showToast(`📑 [${originalItem.name}] 일정을 Day ${targetDayIdx + 1}에 복사했습니다!`, 'success');
+  }
+}
+
+function executeQuickMoveOrCopy(mode) {
+  const { itemId, targetDayIdx } = quickActionState;
+  closeModal('modal-item-quick-actions');
+  moveOrCopyItemToAnotherDay(itemId, targetDayIdx, mode);
+}
 
 function renderTimeline() {
   const trip = getActiveTrip();
@@ -3385,6 +3842,7 @@ function renderTimeline() {
 
     const row = document.createElement('div');
     row.className = 'timeline-row';
+    row.dataset.itemIdx = String(idx);
 
     const rail = document.createElement('div');
     rail.className = 'timeline-rail';
@@ -3419,9 +3877,14 @@ function renderTimeline() {
     const card = document.createElement('div');
     card.className = `timeline-card ${isMemo ? 'memo-card' : ''}`;
     card.onclick = (e) => {
+      if (suppressNextCardClick) {
+        suppressNextCardClick = false;
+        return;
+      }
       if (e.target.closest('.card-btns') || e.target.closest('.btn-map-guide') || e.target.closest('.card-attach-strip')) return;
       openItemEditModal(item.id);
     };
+    attachLongPressAndDragToCard(card, row, item, idx);
 
     const header = document.createElement('div');
     header.className = 'card-header';
@@ -3614,9 +4077,9 @@ function deleteItem(itemId) {
       ? '연결된 숙소 일정(체크인·연박·체크아웃)과 연동된 가계부 지출을 함께 삭제하시겠습니까?'
       : '해당 일정을 삭제하시겠습니까? (연동된 가계부 지출 및 첨부파일도 함께 정리됩니다)',
     () => {
-      if (targetItem && Array.isArray(targetItem.attachments)) {
-        targetItem.attachments.forEach(att => deleteAttachmentRecordFromIdb(att.id));
-      }
+      const removedAttIds = (targetItem && Array.isArray(targetItem.attachments))
+        ? targetItem.attachments.map(att => att.id)
+        : [];
       if (hasGroup) {
         trip.days.forEach(d => {
           d.items = (d.items || []).filter(i => i.hotelGroupId !== targetItem.hotelGroupId);
@@ -3630,6 +4093,7 @@ function deleteItem(itemId) {
           trip.expenses = trip.expenses.filter(e => e.linkedItemId !== itemId);
         }
       }
+      removedAttIds.forEach(attId => deleteAttachmentRecordFromIdb(attId));
       saveDataToStorage();
       renderTimeline();
       if (AppData.activeTab === 'map') renderMap();
@@ -3981,7 +4445,6 @@ function renderBudget() {
   const allExpenses = trip.expenses || [];
   const days = trip.days || [];
 
-  // 일자 필터 유효성 보정
   if (budgetDayFilter !== 'all' && budgetDayFilter !== 'common') {
     const numericDay = Number(budgetDayFilter);
     if (isNaN(numericDay) || numericDay < 0 || numericDay >= days.length) {
@@ -4000,7 +4463,6 @@ function renderBudget() {
     budgetDayFilter = 'all';
   }
 
-  // 상단 일자별 필터 칩 렌더링
   const dayBarEl = document.getElementById('budget-day-bar');
   if (dayBarEl) {
     dayBarEl.replaceChildren();
@@ -4033,7 +4495,6 @@ function renderBudget() {
     }
   }
 
-  // 선택된 필터에 따른 지출 내역 필터링
   const filteredEntries = annotatedExpenses.filter(x => {
     if (budgetDayFilter === 'all') return true;
     if (budgetDayFilter === 'common') return x.resolvedDayIdx === -1;
@@ -4069,7 +4530,6 @@ function renderBudget() {
   document.getElementById('budget-curr-total').textContent = `현지 지출: ${foreignTotal.toLocaleString()} ${currency}`;
   document.getElementById('budget-curr-rate').textContent = `적용 환율: 1 ${currency} = ${rate} 원 >`;
 
-  // 카테고리별 통계 카드 렌더링
   const statsCard = document.getElementById('budget-stats-card');
   const stackedBar = document.getElementById('budget-stacked-bar');
   const catGrid = document.getElementById('budget-cat-grid');
@@ -5171,28 +5631,28 @@ function loadSampleTokyoTrip() {
         items: [
           { id: 'item_1', cat: 'flight', date: '2026-11-20', name: 'Seoul → Tokyo', flightCode: 'KE703', depCity: 'Seoul', arrCity: 'Tokyo', depAirport: 'ICN', arrAirport: 'NRT', depTime: '10:10', arrTime: '12:40', lat: 35.7720, lng: 140.3929, notes: '모바일 탑승권 완료' },
           { id: 'item_2', cat: 'memo', name: '스카이라이너 티켓 교환 안내', notes: '나리타공항 지하 1층 게이세이 센터 교환' },
-          { id: 'item_3', hotelGroupId: 'hotel_grp_sample', hotelRole: 'checkin', cat: 'hotel', name: '호텔 그레이스리 신주쿠', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
+          { id: 'item_3', hotelGroupId: 'hotel_grp_sample', hotelRole: 'checkin', cat: 'hotel', name: '호텔 그레이스리 신주쿠', address: '1-19-1 Kabukicho, Shinjuku-ku, Tokyo', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
         ]
       },
       {
         dayNum: 2,
         date: '2026-11-21',
         items: [
-          { id: 'item_3_d1', hotelGroupId: 'hotel_grp_sample', hotelRole: 'staying', cat: 'hotel', name: '호텔 그레이스리 신주쿠', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
+          { id: 'item_3_d1', hotelGroupId: 'hotel_grp_sample', hotelRole: 'staying', cat: 'hotel', name: '호텔 그레이스리 신주쿠', address: '1-19-1 Kabukicho, Shinjuku-ku, Tokyo', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
         ]
       },
       {
         dayNum: 3,
         date: '2026-11-22',
         items: [
-          { id: 'item_3_d2', hotelGroupId: 'hotel_grp_sample', hotelRole: 'staying', cat: 'hotel', name: '호텔 그레이스리 신주쿠', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
+          { id: 'item_3_d2', hotelGroupId: 'hotel_grp_sample', hotelRole: 'staying', cat: 'hotel', name: '호텔 그레이스리 신주쿠', address: '1-19-1 Kabukicho, Shinjuku-ku, Tokyo', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
         ]
       },
       {
         dayNum: 4,
         date: '2026-11-23',
         items: [
-          { id: 'item_3_d3', hotelGroupId: 'hotel_grp_sample', hotelRole: 'checkout', cat: 'hotel', name: '호텔 그레이스리 신주쿠', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
+          { id: 'item_3_d3', hotelGroupId: 'hotel_grp_sample', hotelRole: 'checkout', cat: 'hotel', name: '호텔 그레이스리 신주쿠', address: '1-19-1 Kabukicho, Shinjuku-ku, Tokyo', checkinDate: '2026-11-20', checkoutDate: '2026-11-23', checkin: '15:00', checkout: '11:00', nights: '3', breakfast: '조식 포함', luggage: '짐보관 가능', lat: 35.6953, lng: 139.7022, notes: '고질라 헤드 테라스 호텔' }
         ]
       }
     ],
