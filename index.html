@@ -2589,10 +2589,20 @@ function toggleMiniMapPicker() {
 
       if (!pickerMap) {
         pickerMap = L.map('mini-picker-map').setView(center, 14);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors'
+        const koTile = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=ko&x={x}&y={y}&z={z}', {
+          subdomains: ['0', '1', '2', '3'],
+          maxZoom: 20,
+          attribution: '&copy; Google Maps'
         }).addTo(pickerMap);
+        koTile.on('tileerror', () => {
+          if (!pickerMap._fallbackAdded) {
+            pickerMap._fallbackAdded = true;
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(pickerMap);
+          }
+        });
 
         pickerMarker = L.marker(center, { draggable: true }).addTo(pickerMap);
         pickerMarker.on('dragend', () => {
@@ -4289,10 +4299,20 @@ function renderMap() {
       const container = document.getElementById('map-container');
       if (!container) return;
       map = L.map('map-container').setView([35.681236, 139.767125], 13);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
+      const koMapTile = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=ko&x={x}&y={y}&z={z}', {
+        subdomains: ['0', '1', '2', '3'],
+        maxZoom: 20,
+        attribution: '&copy; Google Maps'
       }).addTo(map);
+      koMapTile.on('tileerror', () => {
+        if (!map._fallbackAdded) {
+          map._fallbackAdded = true;
+          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+        }
+      });
     }
     map.invalidateSize();
     mapMarkers.forEach(m => map.removeLayer(m));
