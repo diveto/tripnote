@@ -357,12 +357,26 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .toast.toast-success { background: rgba(43, 203, 179, 0.95); }
 @keyframes fadeInOut { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: translateY(0); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
 
+/* ================= Print Overview Sheet (Multi-Day / Single-Day PDF Export) ================= */
+#print-overview-container { display: none; padding: 18px 20px; flex-direction: column; gap: 18px; background: #fff; }
+.print-day-section { border: 1px solid #d1d5db; border-radius: 12px; padding: 14px 16px; break-inside: avoid; page-break-inside: avoid; margin-bottom: 14px; }
+.print-day-header { font-size: 15px; font-weight: 800; color: #111827; padding-bottom: 8px; margin-bottom: 10px; border-bottom: 2px solid #2BCBB3; display: flex; justify-content: space-between; align-items: center; }
+.print-item-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px dashed #e5e7eb; font-size: 12.5px; line-height: 1.45; }
+.print-item-row:last-child { border-bottom: none; padding-bottom: 0; }
+.print-item-num { width: 20px; height: 20px; border-radius: 50%; background: #2BCBB3; color: #fff; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.print-item-memo-dot { width: 20px; text-align: center; flex-shrink: 0; font-size: 13px; }
+.print-item-body { flex: 1; min-width: 0; }
+.print-item-title { font-weight: 800; color: #111827; }
+.print-item-meta { color: #4b5563; font-size: 11.5px; margin-top: 2px; }
+.print-item-note { color: #374151; font-size: 11.5px; margin-top: 3px; background: #f9fafb; padding: 4px 8px; border-radius: 6px; white-space: pre-line; }
+
 @media print {
   body { background: #fff !important; }
-  #app-container { max-width: 100% !important; box-shadow: none !important; }
-  .detail-nav-bar, .day-bar-wrapper, .timeline-actions, .bottom-nav, .fab-add-btn, .card-btns, .btn-map-guide, .modal-backdrop, #toast-container { display: none !important; }
+  #app-container { max-width: 100% !important; box-shadow: none !important; background: #fff !important; }
+  .detail-nav-bar, .day-bar-wrapper, .timeline-actions, .bottom-nav, .fab-add-btn, .card-btns, .btn-map-guide, .modal-backdrop, #toast-container, .tab-content { display: none !important; }
   .screen { padding-bottom: 0 !important; }
-  .detail-hero { height: 150px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .detail-hero { height: 145px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #print-overview-container { display: block !important; }
 }
   </style>
 </head>
@@ -529,6 +543,9 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       </div>
       <div id="checklist-items" style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;"></div>
     </div>
+
+    <!-- 인쇄 / PDF 저장 전용 전체·선택 일차 출력 컨테이너 -->
+    <div id="print-overview-container"></div>
 
     <div class="bottom-nav">
       <button class="nav-btn active" data-tab="timeline" onclick="switchDetailTab('timeline', this)"><span class="icon">📅</span>일정</button>
@@ -4281,7 +4298,98 @@ function copyShareScheduleText() {
   }
 }
 
+function renderPrintOverview(scope = 'all') {
+  const trip = getActiveTrip();
+  const container = document.getElementById('print-overview-container');
+  if (!trip || !container) return;
+  container.replaceChildren();
+
+  const targetDays = scope === 'day'
+    ? (trip.days && trip.days[AppData.activeDayIdx] ? [{ day: trip.days[AppData.activeDayIdx], idx: AppData.activeDayIdx }] : [])
+    : (trip.days || []).map((d, idx) => ({ day: d, idx }));
+
+  targetDays.forEach(({ day, idx }) => {
+    const section = document.createElement('div');
+    section.className = 'print-day-section';
+
+    const header = document.createElement('div');
+    header.className = 'print-day-header';
+    header.innerHTML = `<span>Day ${idx + 1}${day.date ? ` (${day.date})` : ''}</span><span style="font-size:11.5px; color:#6b7280; font-weight:600;">${(day.items || []).length}개 항목</span>`;
+    section.appendChild(header);
+
+    const items = day.items || [];
+    if (items.length === 0) {
+      const emptyEl = document.createElement('div');
+      emptyEl.style.cssText = 'font-size: 12px; color: #9ca3af; padding: 6px 0;';
+      emptyEl.textContent = '등록된 일정 없음';
+      section.appendChild(emptyEl);
+    } else {
+      let stepNum = 1;
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'print-item-row';
+
+        if (item.cat === 'memo') {
+          row.innerHTML = `
+            <div class="print-item-memo-dot">📝</div>
+            <div class="print-item-body">
+              <div class="print-item-title">[메모] ${escapeHtmlString(item.name)}</div>
+              ${item.notes ? `<div class="print-item-note">${escapeHtmlString(item.notes)}</div>` : ''}
+            </div>
+          `;
+        } else if (item.cat === 'flight') {
+          const dep = extractAirportCode(item.depAirport) || '출발';
+          const arr = extractAirportCode(item.arrAirport) || '도착';
+          const timeInfo = `${item.depTime || ''}${item.arrTime ? ` → ${item.arrTime}` : ''}`;
+          const codeInfo = item.flightCode ? `편명 ${escapeHtmlString(item.flightCode)} · ` : '';
+          row.innerHTML = `
+            <div class="print-item-num">${stepNum++}</div>
+            <div class="print-item-body">
+              <div class="print-item-title">✈️ ${escapeHtmlString(item.name)}</div>
+              <div class="print-item-meta">${codeInfo}${escapeHtmlString(dep)} → ${escapeHtmlString(arr)} ${escapeHtmlString(timeInfo)}</div>
+              ${item.notes ? `<div class="print-item-note">${escapeHtmlString(item.notes)}</div>` : ''}
+            </div>
+          `;
+        } else if (item.cat === 'hotel') {
+          const roleText = item.hotelRole === 'checkout'
+            ? `체크아웃 ${item.checkout || '11:00'}`
+            : item.hotelRole === 'staying'
+              ? '연박 중'
+              : `체크인 ${item.checkin || '15:00'} (${item.nights || '1'}박)`;
+          row.innerHTML = `
+            <div class="print-item-num">${stepNum++}</div>
+            <div class="print-item-body">
+              <div class="print-item-title">🏨 ${escapeHtmlString(item.name)}</div>
+              <div class="print-item-meta">${escapeHtmlString(roleText)}${item.address ? ` · ${escapeHtmlString(item.address)}` : ''}</div>
+              ${item.notes ? `<div class="print-item-note">${escapeHtmlString(item.notes)}</div>` : ''}
+            </div>
+          `;
+        } else {
+          const catLabel = PLACE_BADGE_LABELS[item.cat] || '장소';
+          const metaParts = [];
+          if (item.time) metaParts.push(`⏰ ${item.time}`);
+          if (item.duration) metaParts.push(`체류 ${item.duration}`);
+          if (item.address) metaParts.push(item.address);
+          row.innerHTML = `
+            <div class="print-item-num">${stepNum++}</div>
+            <div class="print-item-body">
+              <div class="print-item-title">[${escapeHtmlString(catLabel)}] ${escapeHtmlString(item.name)}</div>
+              ${metaParts.length > 0 ? `<div class="print-item-meta">${escapeHtmlString(metaParts.join(' · '))}</div>` : ''}
+              ${item.notes ? `<div class="print-item-note">${escapeHtmlString(item.notes)}</div>` : ''}
+            </div>
+          `;
+        }
+
+        section.appendChild(row);
+      });
+    }
+
+    container.appendChild(section);
+  });
+}
+
 function printScheduleOverview() {
+  renderPrintOverview(currentShareScope);
   closeModal('modal-share-schedule');
   setTimeout(() => {
     window.print();
@@ -5817,6 +5925,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('online', () => {
     refreshOpenAviationDatabase(false);
+  });
+
+  window.addEventListener('beforeprint', () => {
+    const container = document.getElementById('print-overview-container');
+    if (container && container.children.length === 0) {
+      renderPrintOverview('all');
+    }
   });
 
   document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
