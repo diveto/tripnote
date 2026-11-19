@@ -222,7 +222,8 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .viewer-stage { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px; }
 .viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; transition: transform 0.2s ease; cursor: zoom-in; }
 .viewer-stage img.zoomed { max-width: none; max-height: none; width: 190%; cursor: zoom-out; }
-.viewer-pdf-box { background: #1e293b; border: 1px solid rgba(255,255,255,0.18); border-radius: 16px; padding: 24px 20px; text-align: center; max-width: 340px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.viewer-pdf-wrap { width: 100%; height: 100%; max-width: 820px; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; }
+.viewer-pdf-frame { width: 100%; flex: 1; min-height: 62vh; border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; background: #ffffff; }
 
 .fab-add-btn { position: fixed; bottom: calc(80px + var(--safe-bottom)); right: max(20px, calc(50vw - 220px)); width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: var(--white); border: none; font-size: 28px; font-weight: 400; box-shadow: 0 6px 20px rgba(43,203,179,0.45); cursor: pointer; z-index: 45; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
 .fab-add-btn:active { transform: scale(0.92); }
@@ -280,18 +281,23 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
 .flight-ext-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .flight-ext-link { font-size: 11px; font-weight: 700; color: #1d4ed8; background: var(--white); border: 1px solid #93c5fd; border-radius: 6px; padding: 3px 8px; text-decoration: none; }
 
-.geo-search-row { display: flex; gap: 8px; }
-.geo-helper-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
-.btn-mini-pill { background: var(--white); border: 1px solid #93c5fd; color: #1d4ed8; border-radius: 14px; padding: 4px 10px; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
-.btn-mini-pill:active { background: #dbeafe; }
-.btn-geo { background: var(--dark); color: var(--white); border: none; border-radius: 10px; padding: 0 14px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.geo-candidates-box { display: none; flex-direction: column; gap: 6px; background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 8px; margin-top: 4px; }
-.geo-candidate-item { text-align: left; background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 8px; padding: 8px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
-.geo-candidate-item:active { background: var(--primary-light); border-color: var(--primary); }
-.geo-candidate-name { font-size: 13px; font-weight: 800; color: var(--dark); }
-.geo-candidate-addr { font-size: 11px; color: var(--gray-600); line-height: 1.3; }
-#mini-picker-wrap { display: none; flex-direction: column; gap: 6px; margin-top: 6px; border: 1px solid var(--gray-200); border-radius: 10px; overflow: hidden; background: var(--gray-100); }
-#mini-picker-map { height: 190px; width: 100%; z-index: 5; }
+/* Unified Location & Interactive Map Card */
+.unified-geo-card { border: 1px solid #d1d5db; border-radius: 12px; overflow: hidden; background: var(--white); display: flex; flex-direction: column; }
+.unified-geo-bar { display: flex; gap: 6px; padding: 8px; background: var(--gray-100); border-bottom: 1px solid var(--gray-200); align-items: center; }
+.unified-geo-bar .form-input { padding: 9px 30px 9px 10px; font-size: 13px; border-radius: 8px; }
+.btn-geo-go { background: var(--primary-dark); color: var(--white); border: none; border-radius: 8px; padding: 0 13px; height: 37px; font-size: 12.5px; font-weight: 800; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.btn-geo-go:active { opacity: 0.88; }
+.geo-results-panel { display: none; flex-direction: column; background: var(--white); border-bottom: 1px solid var(--gray-200); max-height: 168px; overflow-y: auto; }
+.geo-results-panel.active { display: flex; }
+.geo-result-row { padding: 8px 11px; border-bottom: 1px solid var(--gray-100); cursor: pointer; text-align: left; background: var(--white); border-left: none; border-right: none; border-top: none; display: flex; flex-direction: column; gap: 2px; transition: background 0.12s; }
+.geo-result-row:last-child { border-bottom: none; }
+.geo-result-row:active, .geo-result-row.selected { background: var(--primary-light); }
+.geo-result-name { font-size: 12.5px; font-weight: 800; color: var(--dark); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.geo-result-sub { font-size: 11px; color: var(--gray-600); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-mini-pill { background: var(--white); border: 1px solid #cbd5e1; color: var(--gray-800); border-radius: 14px; padding: 4px 9px; font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.btn-mini-pill:active { background: var(--gray-100); }
+#mini-picker-map { height: 205px; width: 100%; z-index: 5; background: #e5e9ec; }
+.unified-geo-footer { padding: 6px 10px; background: var(--gray-100); border-top: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-600); }
 
 #map-container { height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); box-shadow: var(--shadow); z-index: 1; }
 .budget-summary-card { background: linear-gradient(135deg, #222222 0%, #3a3a3a 100%); color: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
@@ -666,9 +672,9 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       <div id="field-flight" style="display:none; flex-direction: column; gap: 10px;">
         <div class="flight-lookup-box">
           <div class="form-group">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
-              <label style="color: #1e40af;">편명 또는 공항 구간 조회 (예: VN432, ICN-CXR)</label>
-              <button type="button" id="btn-refresh-aviation-db" class="btn-mini-pill" onclick="refreshOpenAviationDatabase(true)">🔄 오픈소스 DB 최신화</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:nowrap;">
+              <label style="color: #1e40af; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">편명/구간 조회 (예: VN432, ICN-CXR)</label>
+              <button type="button" id="btn-refresh-aviation-db" class="btn-mini-pill" style="flex-shrink:0; white-space:nowrap; font-size:10.5px; padding:3px 8px;" onclick="refreshOpenAviationDatabase(true)">🔄 항공 DB 업데이트</button>
             </div>
             <div class="flight-lookup-row">
               <input type="text" id="flight-code" class="form-input" placeholder="예: KE703, VN432, ICN-CXR" style="text-transform: uppercase;" onkeydown="if(event.key==='Enter'){event.preventDefault(); lookupFlightSchedule();}">
@@ -676,7 +682,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
             </div>
           </div>
           <div id="flight-lookup-notice" class="flight-lookup-notice">
-            <div id="flight-lookup-msg"></div>
+            <div id="flight-lookup-msg" style="white-space: pre-line;"></div>
             <div id="flight-lookup-suggestions" class="flight-ext-links"></div>
           </div>
         </div>
@@ -776,21 +782,17 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       </div>
 
       <div id="field-geo" class="form-group">
-        <label>위치 (주소·장소명 / 구글맵 URL·좌표 / 지도 찍기)</label>
-        <div class="geo-search-row">
-          <input type="text" id="item-address" class="form-input" placeholder="주소, 장소명, 구글맵 링크 또는 위도,경도" oninput="tryParseGoogleMapsOrCoords(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); geocodeAddress();}">
-          <button type="button" class="btn-geo" onclick="geocodeAddress()">위치찾기</button>
-        </div>
-        <div class="geo-helper-row">
-          <a id="btn-open-google-maps" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="btn-mini-pill" onclick="openExternalGoogleMaps()">🗺️ 구글맵 열기 ↗</a>
-          <button type="button" class="btn-mini-pill" onclick="toggleMiniPickerMap()">📍 지도에서 찍기</button>
-        </div>
-        <div id="geo-candidates-box" class="geo-candidates-box"></div>
-        <div id="mini-picker-wrap">
+        <label>위치 (주소·장소명 / 구글맵 URL 좌표 / 지도 찍기)</label>
+        <div class="unified-geo-card">
+          <div class="unified-geo-bar">
+            <input type="text" id="item-address" class="form-input" placeholder="장소명, 주소 또는 좌표(35.6812, 139.7671)" oninput="handleAddressFieldInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault(); searchAndMoveOnMap();}">
+            <button type="button" class="btn-geo-go" onclick="searchAndMoveOnMap()">검색</button>
+          </div>
+          <div id="geo-results-panel" class="geo-results-panel"></div>
           <div id="mini-picker-map"></div>
-          <div style="padding: 6px 10px; font-size: 11px; color: var(--gray-600); display:flex; justify-content:space-between; align-items:center;">
-            <span>지도를 터치(클릭)하면 정확한 핀 좌표가 입력됩니다.</span>
-            <button type="button" class="btn-mini-pill" onclick="toggleMiniPickerMap()">닫기</button>
+          <div class="unified-geo-footer">
+            <span>지도를 터치하거나 핀을 드래그해 미세 조정</span>
+            <a id="btn-open-google-maps" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="btn-mini-pill" onclick="openExternalGoogleMaps()">🗺️ 구글맵 ↗</a>
           </div>
         </div>
         <input type="hidden" id="item-lat">
@@ -843,9 +845,9 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
     <div class="modal-body">
       <div class="form-group">
         <label>도시명으로 랜덤 여행 사진 추천받기</label>
-        <div class="geo-search-row">
+        <div class="geo-search-row" style="display:flex; gap:8px;">
           <input type="text" id="random-cover-city-input" class="form-input" placeholder="도시명 입력 (예: 도쿄, 오사카, 파리, 제주, 뉴욕)" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleRandomCityCoverClick();}">
-          <button type="button" id="btn-random-city-cover" class="btn-geo" style="background: var(--primary-dark);" onclick="handleRandomCityCoverClick()">🎲 랜덤 추천</button>
+          <button type="button" id="btn-random-city-cover" class="btn-geo-go" style="height:auto; padding:0 14px;" onclick="handleRandomCityCoverClick()">🎲 랜덤 추천</button>
         </div>
       </div>
       <div class="form-group">
@@ -912,8 +914,12 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
         현재 저장된 데이터 확인 중...
       </div>
       <div style="font-size: 13px; color: var(--gray-600); line-height: 1.5;">
-        작성한 여행 일정, 가계부, 준비물 데이터를 JSON 파일로 내보내거나 업로드하여 복원할 수 있습니다.
+        작성한 여행 일정, 가계부, 준비물 및 첨부한 사진·PDF 데이터를 JSON 파일로 내보내거나 업로드하여 복원할 수 있습니다.
       </div>
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--dark); background: var(--gray-100); padding: 9px 12px; border-radius: 10px; border: 1px solid var(--gray-200); cursor: pointer;">
+        <input type="checkbox" id="backup-include-attachments" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
+        <span>📎 첨부 사진 · PDF 바우처 데이터까지 함께 백업</span>
+      </label>
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <button type="button" class="btn-full btn-primary" onclick="exportDataToFile()">📥 JSON 파일 내보내기 (다운로드)</button>
         <button type="button" class="btn-full btn-sub" onclick="copyBackupJsonToClipboard()" style="border: 1px solid var(--gray-200);">📋 백업 JSON 클립보드 복사</button>
@@ -924,7 +930,7 @@ body { background: #e5e9ec; display: flex; justify-content: center; min-height: 
       </div>
       <div style="margin-top: 4px;">
         <label style="font-size: 12px; font-weight: 700; display: block;">2) JSON 텍스트 직접 붙여넣기 복원</label>
-        <textarea id="backup-json-paste" class="form-textarea" rows="3" placeholder='{"version":"1.3.0","trips":[...]} 형태의 JSON을 붙여넣으세요' style="margin-top: 6px; font-size: 12px;"></textarea>
+        <textarea id="backup-json-paste" class="form-textarea" rows="3" placeholder='{"version":"1.4.0","trips":[...]} 형태의 JSON을 붙여넣으세요' style="margin-top: 6px; font-size: 12px;"></textarea>
         <button type="button" class="btn-full btn-sub" onclick="importDataFromText()" style="margin-top: 6px; border: 1px solid var(--primary); color: var(--primary-dark);">♻️ 붙여넣은 JSON으로 복원하기</button>
       </div>
     </div>
@@ -1716,12 +1722,12 @@ async function getAviationMeta(key) {
 async function refreshOpenAviationDatabase(manual = false) {
   if (isSyncingAviation) return;
   if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-    if (manual) showToast('오프라인 상태입니다. 로컬에 저장된 오픈소스 DB를 사용합니다.', 'info');
+    if (manual) showToast('오프라인 상태입니다. 로컬에 저장된 항공 DB를 사용합니다.', 'info');
     return;
   }
   isSyncingAviation = true;
   const btn = document.getElementById('btn-refresh-aviation-db');
-  if (btn) btn.textContent = '⏳ DB 갱신 중...';
+  if (btn) btn.textContent = '⏳ 업데이트 중...';
 
   try {
     const [airportsRes, airlinesRes, routesRes] = await Promise.all([
@@ -1810,7 +1816,7 @@ async function refreshOpenAviationDatabase(manual = false) {
     });
 
     if (manual) {
-      showToast(`오픈소스 항공 DB 최신화 완료 (공항 ${airportsMap.size}개, 노선 ${routesMap.size}개)`, 'success');
+      showToast(`항공 DB 업데이트 완료 (공항 ${airportsMap.size}개, 노선 ${routesMap.size}개)`, 'success');
     }
   } catch (e) {
     if (manual) {
@@ -1818,7 +1824,7 @@ async function refreshOpenAviationDatabase(manual = false) {
     }
   } finally {
     isSyncingAviation = false;
-    if (btn) btn.textContent = '🔄 오픈소스 DB 최신화';
+    if (btn) btn.textContent = '🔄 항공 DB 업데이트';
   }
 }
 
@@ -1975,6 +1981,7 @@ function applyResolvedFlightRoute(info) {
     document.getElementById('item-lng').value = info.lng;
     document.getElementById('geo-status-msg').textContent = `✓ 도착 공항 좌표 등록: (${Number(info.lat).toFixed(4)}, ${Number(info.lng).toFixed(4)})`;
     document.getElementById('geo-status-msg').style.color = 'var(--primary-dark)';
+    updateMiniPickerPosition(Number(info.lat), Number(info.lng));
   }
   syncAllInputClearButtons();
 }
@@ -2165,6 +2172,20 @@ async function getAttachmentRecordFromIdb(id) {
     });
   } catch (e) {
     return null;
+  }
+}
+
+async function getAllAttachmentRecordsFromIdb() {
+  try {
+    const db = await openAviationIdb();
+    return new Promise((resolve) => {
+      const tx = db.transaction('attachments', 'readonly');
+      const req = tx.objectStore('attachments').getAll();
+      req.onsuccess = () => resolve(Array.isArray(req.result) ? req.result : []);
+      req.onerror = () => resolve([]);
+    });
+  } catch (e) {
+    return [];
   }
 }
 
@@ -2407,15 +2428,23 @@ async function renderActiveViewerAttachment() {
     stageEl.appendChild(img);
   } else {
     if (zoomBtn) zoomBtn.style.display = 'none';
-    const pdfCard = document.createElement('div');
-    pdfCard.className = 'viewer-pdf-box';
-    pdfCard.innerHTML = `
-      <div style="font-size: 44px;">📄</div>
-      <div style="font-size: 15px; font-weight: 800; word-break: break-all;">${escapeHtmlString(rec.name || 'E-티켓 바우처.pdf')}</div>
-      <div style="font-size: 12px; color: #94a3b8; line-height: 1.45;">오프라인 저장소에서 불러온 PDF 문서입니다. 아래 버튼을 눌러 기기 PDF 뷰어로 바로 열 수 있습니다.</div>
-      <a href="${blobUrl}" target="_blank" rel="noopener noreferrer" class="btn-full btn-primary" style="text-decoration:none; display:block; margin-top:4px;">📖 PDF 문서 바로 열기</a>
+    const pdfWrap = document.createElement('div');
+    pdfWrap.className = 'viewer-pdf-wrap';
+
+    const iframe = document.createElement('iframe');
+    iframe.className = 'viewer-pdf-frame';
+    iframe.src = blobUrl;
+    iframe.title = rec.name || 'PDF 문서 미리보기';
+    pdfWrap.appendChild(iframe);
+
+    const footerBar = document.createElement('div');
+    footerBar.style.cssText = 'display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; background: rgba(30,41,59,0.9); padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);';
+    footerBar.innerHTML = `
+      <span style="font-size: 12px; color: #cbd5e1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">📄 ${escapeHtmlString(rec.name || 'E-티켓 바우처.pdf')}</span>
+      <a href="${blobUrl}" target="_blank" rel="noopener noreferrer" class="btn-viewer-pill" style="background: var(--primary); border-color: var(--primary); color: #fff; flex-shrink: 0;">외부 앱으로 열기 ↗</a>
     `;
-    stageEl.appendChild(pdfCard);
+    pdfWrap.appendChild(footerBar);
+    stageEl.appendChild(pdfWrap);
   }
 
   document.getElementById('modal-attachment-viewer').classList.add('active');
@@ -2439,7 +2468,7 @@ function closeAttachmentViewer() {
   }
 }
 
-/* ================= Google Maps Link / Coordinate Parser, Geocoding & Mini Map Picker ================= */
+/* ================= Unified Location Search & Interactive Map ================= */
 function openExternalGoogleMaps() {
   const q = document.getElementById('item-address').value.trim() || document.getElementById('item-name').value.trim();
   const lat = document.getElementById('item-lat').value;
@@ -2454,113 +2483,471 @@ function openExternalGoogleMaps() {
   if (linkEl) linkEl.href = url;
 }
 
+function extractCoordsFromText(str) {
+  if (!str) return null;
+  const s = String(str);
+  const patterns = [
+    /@(-?\d+\.\d+),(-?\d+\.\d+)/,
+    /[?&](?:q|query|ll|center|sll)=(-?\d+\.\d+)(?:%2C|,)(-?\d+\.\d+)/i,
+    /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,
+    /\/place\/[^/]+\/@(-?\d+\.\d+),(-?\d+\.\d+)/,
+    /"lat"\s*:\s*(-?\d+\.\d+)\s*,\s*"lng"\s*:\s*(-?\d+\.\d+)/,
+    /\[\s*null\s*,\s*null\s*,\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]/,
+    /^(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)$/
+  ];
+  for (const re of patterns) {
+    const m = s.match(re);
+    if (m) {
+      const lat = parseFloat(m[1]);
+      const lng = parseFloat(m[2]);
+      if (!isNaN(lat) && !isNaN(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+        return { lat, lng };
+      }
+    }
+  }
+  return null;
+}
+
+function extractPlaceNameFromGoogleUrl(urlStr) {
+  try {
+    const placeMatch = urlStr.match(/\/maps\/place\/([^/@?#]+)/);
+    if (placeMatch && placeMatch[1]) {
+      return decodeURIComponent(placeMatch[1].replace(/\+/g, ' ')).trim();
+    }
+    const u = new URL(urlStr);
+    const qParam = u.searchParams.get('q') || u.searchParams.get('query');
+    if (qParam && !/^-?\d+\.\d+\s*,\s*-?\d+\.\d+$/.test(qParam)) {
+      return qParam.trim();
+    }
+  } catch (e) {}
+  return '';
+}
+
 function tryParseGoogleMapsOrCoords(val) {
   if (!val) return false;
   const str = String(val).trim();
   const statusEl = document.getElementById('geo-status-msg');
+  const coords = extractCoordsFromText(str);
 
-  let lat = null, lng = null;
-  const atMatch = str.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-  const qMatch = str.match(/[?&](?:q|query|ll)=(-?\d+\.\d+),(-?\d+\.\d+)/);
-  const bangMatch = str.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
-  const directMatch = str.match(/^(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)$/);
-
-  if (atMatch) { lat = parseFloat(atMatch[1]); lng = parseFloat(atMatch[2]); }
-  else if (qMatch) { lat = parseFloat(qMatch[1]); lng = parseFloat(qMatch[2]); }
-  else if (bangMatch) { lat = parseFloat(bangMatch[1]); lng = parseFloat(bangMatch[2]); }
-  else if (directMatch) { lat = parseFloat(directMatch[1]); lng = parseFloat(directMatch[2]); }
-
-  if (lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
-    document.getElementById('item-lat').value = lat;
-    document.getElementById('item-lng').value = lng;
+  if (coords) {
+    document.getElementById('item-lat').value = coords.lat;
+    document.getElementById('item-lng').value = coords.lng;
+    const extractedName = extractPlaceNameFromGoogleUrl(str);
+    if (extractedName) {
+      document.getElementById('item-address').value = extractedName;
+      const nameInput = document.getElementById('item-name');
+      if (nameInput && !nameInput.value.trim()) nameInput.value = extractedName;
+      syncAllInputClearButtons();
+    }
     if (statusEl) {
-      statusEl.textContent = `✓ 좌표 자동 추출 완료: (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
+      statusEl.textContent = `✓ 좌표 적용 완료: (${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)})`;
       statusEl.style.color = 'var(--primary-dark)';
     }
-    updateMiniPickerPosition(lat, lng);
+    updateMiniPickerPosition(coords.lat, coords.lng);
     return true;
   }
   return false;
 }
 
-async function geocodeAddress() {
-  const query = document.getElementById('item-address').value.trim();
+async function resolveShortGoogleMapsUrl(shortUrl) {
   const statusEl = document.getElementById('geo-status-msg');
-  const candBox = document.getElementById('geo-candidates-box');
+  if (statusEl) {
+    statusEl.textContent = '⏳ 구글맵 공유 링크에서 좌표를 확인하는 중...';
+    statusEl.style.color = 'var(--blue)';
+  }
+
+  const cleanUrl = shortUrl.trim();
+  const proxyCandidates = [
+    `https://api.allorigins.win/get?url=${encodeURIComponent(cleanUrl)}`,
+    `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`
+  ];
+
+  for (const proxyUrl of proxyCandidates) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(proxyUrl, { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+
+      let finalUrl = '';
+      let htmlBody = '';
+      if (proxyUrl.includes('allorigins.win')) {
+        const json = await res.json();
+        finalUrl = (json.status && json.status.url) || '';
+        htmlBody = json.contents || '';
+      } else {
+        finalUrl = res.url || '';
+        htmlBody = await res.text();
+      }
+
+      const coords = extractCoordsFromText(finalUrl) || extractCoordsFromText(htmlBody);
+      let placeTitle = extractPlaceNameFromGoogleUrl(finalUrl);
+      if (!placeTitle && htmlBody) {
+        const ogMatch = htmlBody.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+          || htmlBody.match(/<title>([^<]+)<\/title>/i);
+        if (ogMatch && ogMatch[1]) {
+          placeTitle = ogMatch[1].replace(/\s*-\s*Google\s*(지도|Maps).*$/i, '').trim();
+        }
+      }
+
+      if (coords) {
+        document.getElementById('item-lat').value = coords.lat.toFixed(6);
+        document.getElementById('item-lng').value = coords.lng.toFixed(6);
+        if (placeTitle && !/^Google\s*(지도|Maps)$/i.test(placeTitle)) {
+          document.getElementById('item-address').value = placeTitle;
+          const nameInput = document.getElementById('item-name');
+          if (nameInput && !nameInput.value.trim()) nameInput.value = placeTitle;
+          syncAllInputClearButtons();
+        }
+        if (statusEl) {
+          statusEl.textContent = `✓ 구글맵 공유 링크 좌표 적용 완료: (${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)})`;
+          statusEl.style.color = 'var(--primary-dark)';
+        }
+        updateMiniPickerPosition(coords.lat, coords.lng);
+        showToast('구글맵 공유 링크에서 좌표를 추출했습니다!', 'success');
+        return true;
+      }
+
+      if (placeTitle && !/^Google\s*(지도|Maps)$/i.test(placeTitle)) {
+        document.getElementById('item-address').value = placeTitle;
+        syncAllInputClearButtons();
+        await searchAndMoveOnMap();
+        return true;
+      }
+    } catch (e) {}
+  }
+
+  if (statusEl) {
+    statusEl.innerHTML = '단축 링크(<code>maps.app.goo.gl</code>)는 보안 정책상 직접 해제가 제한됩니다. 위 검색창에서 <b>장소명을 검색</b>하거나 <b>지도를 직접 터치</b>해 핀을 찍어주세요.';
+    statusEl.style.color = 'var(--coral)';
+  }
+  return false;
+}
+
+function cleanAddressQueryVariants(rawQuery, tripCity) {
+  const variants = [];
+  const addVariant = (q) => {
+    const trimmed = String(q || '').replace(/,\s*,/g, ',').replace(/^[,\s]+|[,\s]+$/g, '').replace(/\s+/g, ' ').trim();
+    if (trimmed && !variants.includes(trimmed)) variants.push(trimmed);
+  };
+
+  const countryMap = {
+    '일본': 'Japan', '대한민국': 'South Korea', '한국': 'South Korea',
+    '베트남': 'Vietnam', '태국': 'Thailand', '대만': 'Taiwan',
+    '프랑스': 'France', '이탈리아': 'Italy', '스페인': 'Spain',
+    '영국': 'United Kingdom', '미국': 'United States', '홍콩': 'Hong Kong',
+    '싱가포르': 'Singapore', '인도네시아': 'Indonesia', '필리핀': 'Philippines'
+  };
+
+  let normalized = String(rawQuery || '').trim();
+  Object.keys(countryMap).forEach(ko => {
+    const en = countryMap[ko];
+    normalized = normalized.replace(new RegExp(`(?:^|[\\s,]+)${ko}(?:$|[\\s,]+)`, 'g'), `, ${en} `);
+  });
+
+  addVariant(normalized);
+
+  let cleaned = normalized
+    .replace(/〒?\s*\d{3}-\d{4}/g, ' ')
+    .replace(/\b\d{5,6}\b/g, ' ')
+    .replace(/\b\d+\s*(?:층|호|F|B\d+F?)\b/gi, ' ')
+    .replace(/,\s*,/g, ',')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  addVariant(cleaned);
+
+  // 앞부분 번지수(예: 1917, 1-19-1)를 제거한 동/지역 단위 주소 생성
+  const withoutHouseNum = cleaned
+    .replace(/^[\d\-]+\s+/, '')
+    .replace(/,\s*[\d\-]+/g, '')
+    .trim();
+  addVariant(withoutHouseNum);
+
+  if (tripCity && !withoutHouseNum.toLowerCase().includes(tripCity.toLowerCase())) {
+    addVariant(`${tripCity} ${withoutHouseNum}`);
+  }
+
+  const parts = withoutHouseNum.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+  if (parts.length >= 2) {
+    addVariant(`${parts[0]}, ${parts[1]}`);
+    addVariant(parts[0]);
+  }
+
+  return variants.slice(0, 5);
+}
+
+const CITY_CENTER_HINTS = {
+  '도쿄': { lat: 35.6812, lng: 139.7671 },
+  '오사카': { lat: 34.6937, lng: 135.5023 },
+  '후쿠오카': { lat: 33.5902, lng: 130.4017 },
+  '벳푸': { lat: 33.2846, lng: 131.4912 },
+  '유후인': { lat: 33.2621, lng: 131.3550 },
+  '오이타': { lat: 33.2382, lng: 131.6126 },
+  '교토': { lat: 35.0116, lng: 135.7681 },
+  '삿포로': { lat: 43.0618, lng: 141.3545 },
+  '오키나와': { lat: 26.2124, lng: 127.6809 },
+  '나고야': { lat: 35.1815, lng: 136.9066 },
+  '제주': { lat: 33.4996, lng: 126.5312 },
+  '다낭': { lat: 16.0544, lng: 108.2022 },
+  '나트랑': { lat: 12.2388, lng: 109.1967 },
+  '방콕': { lat: 13.7563, lng: 100.5018 },
+  '타이베이': { lat: 25.0330, lng: 121.5654 },
+  '홍콩': { lat: 22.3193, lng: 114.1694 },
+  '싱가포르': { lat: 1.3521, lng: 103.8198 },
+  '파리': { lat: 48.8566, lng: 2.3522 },
+  '뉴욕': { lat: 40.7128, lng: -74.0060 }
+};
+
+function getTripReferenceCenter(trip) {
+  if (!trip) return null;
+  if (Array.isArray(trip.days)) {
+    for (const d of trip.days) {
+      const geo = (d.items || []).find(i => i.lat && i.lng && i.cat !== 'memo');
+      if (geo) return { lat: Number(geo.lat), lng: Number(geo.lng) };
+    }
+  }
+  const city = (trip.city || '').trim();
+  for (const k in CITY_CENTER_HINTS) {
+    if (city.includes(k) || k.includes(city)) return CITY_CENTER_HINTS[k];
+  }
+  return null;
+}
+
+function hideGeoResultsPanel() {
+  const panel = document.getElementById('geo-results-panel');
+  if (panel) {
+    panel.classList.remove('active');
+    panel.replaceChildren();
+  }
+}
+
+function renderGeoResultsPanel(results, refCenter) {
+  const panel = document.getElementById('geo-results-panel');
+  if (!panel) return;
+  panel.replaceChildren();
+
+  if (!Array.isArray(results) || results.length <= 1) {
+    panel.classList.remove('active');
+    return;
+  }
+
+  results.forEach((r, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `geo-result-row ${idx === 0 ? 'selected' : ''}`;
+    const distTag = (refCenter && typeof calcDistance === 'function')
+      ? `<span style="font-size:10px; color:var(--primary-dark); font-weight:700; flex-shrink:0;">약 ${calcDistance(refCenter.lat, refCenter.lng, r.lat, r.lng).toFixed(1)}km</span>`
+      : '';
+    btn.innerHTML = `
+      <div class="geo-result-name">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📍 ${escapeHtmlString(r.name || r.display)}</span>
+        ${distTag}
+      </div>
+      <div class="geo-result-sub">${escapeHtmlString(r.display || '')}</div>
+    `;
+    btn.onclick = () => {
+      panel.querySelectorAll('.geo-result-row').forEach(el => el.classList.remove('selected'));
+      btn.classList.add('selected');
+      applySelectedLocationCandidate(r);
+    };
+    panel.appendChild(btn);
+  });
+
+  panel.classList.add('active');
+}
+
+async function queryMultiGeocoders(rawQuery) {
+  const trip = getActiveTrip();
+  const tripCity = (trip && trip.city) ? trip.city : '';
+  const refCenter = getTripReferenceCenter(trip);
+  const variants = cleanAddressQueryVariants(rawQuery, tripCity);
+  const nameInputVal = (document.getElementById('item-name')?.value || '').trim();
+  if (nameInputVal && nameInputVal !== rawQuery) {
+    variants.push(nameInputVal);
+    if (tripCity && !nameInputVal.includes(tripCity)) {
+      variants.push(`${tripCity} ${nameInputVal}`);
+    }
+  }
+
+  const merged = [];
+  const seen = new Set();
+
+  const pushUnique = (item) => {
+    const key = `${item.lat.toFixed(4)}_${item.lng.toFixed(4)}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(item);
+    }
+  };
+
+  const biasParam = refCenter ? `&location=${refCenter.lng},${refCenter.lat}` : '';
+  const photonBias = refCenter ? `&lat=${refCenter.lat}&lon=${refCenter.lng}` : '';
+
+  for (const q of variants.slice(0, 6)) {
+    const [nomRes, photonRes, arcgisRes] = await Promise.allSettled([
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&accept-language=ko&limit=5&q=${encodeURIComponent(q)}`).then(r => r.ok ? r.json() : []),
+      fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=5${photonBias}`).then(r => r.ok ? r.json() : { features: [] }),
+      fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=${encodeURIComponent(q)}${biasParam}&maxLocations=5&f=json`).then(r => r.ok ? r.json() : { candidates: [] })
+    ]);
+
+    if (nomRes.status === 'fulfilled' && Array.isArray(nomRes.value)) {
+      nomRes.value.forEach(r => {
+        const lat = parseFloat(r.lat);
+        const lng = parseFloat(r.lon);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          pushUnique({
+            name: r.name || r.display_name.split(',')[0],
+            display: r.display_name,
+            lat,
+            lng
+          });
+        }
+      });
+    }
+
+    if (photonRes.status === 'fulfilled' && photonRes.value && Array.isArray(photonRes.value.features)) {
+      photonRes.value.features.forEach(f => {
+        const coords = f.geometry && f.geometry.coordinates;
+        const props = f.properties || {};
+        if (Array.isArray(coords) && coords.length >= 2) {
+          const lng = parseFloat(coords[0]);
+          const lat = parseFloat(coords[1]);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const labelParts = [props.name, props.street, props.district || props.city || props.county, props.country].filter(Boolean);
+            pushUnique({
+              name: props.name || labelParts[0] || q,
+              display: labelParts.join(', ') || q,
+              lat,
+              lng
+            });
+          }
+        }
+      });
+    }
+
+    if (arcgisRes.status === 'fulfilled' && arcgisRes.value && Array.isArray(arcgisRes.value.candidates)) {
+      arcgisRes.value.candidates.forEach(c => {
+        if (c.location && typeof c.location.y === 'number' && typeof c.location.x === 'number') {
+          pushUnique({
+            name: (c.address || q).split(',')[0],
+            display: c.address || q,
+            lat: c.location.y,
+            lng: c.location.x
+          });
+        }
+      });
+    }
+
+    if (merged.length >= 6) break;
+  }
+
+  if (refCenter && merged.length > 1) {
+    merged.sort((a, b) => {
+      const distA = calcDistance(refCenter.lat, refCenter.lng, a.lat, a.lng);
+      const distB = calcDistance(refCenter.lat, refCenter.lng, b.lat, b.lng);
+      const nearA = distA <= 80 ? 0 : 1;
+      const nearB = distB <= 80 ? 0 : 1;
+      if (nearA !== nearB) return nearA - nearB;
+      return distA - distB;
+    });
+  }
+
+  return merged.slice(0, 6);
+}
+
+function applySelectedLocationCandidate(r) {
+  document.getElementById('item-lat').value = r.lat.toFixed(6);
+  document.getElementById('item-lng').value = r.lng.toFixed(6);
+  const addrInput = document.getElementById('item-address');
+  if (addrInput && !addrInput.value.trim()) {
+    addrInput.value = r.name || r.display;
+  }
+  const nameInput = document.getElementById('item-name');
+  if (nameInput && !nameInput.value.trim()) {
+    nameInput.value = (addrInput && addrInput.value.trim()) ? addrInput.value.trim() : r.name;
+  }
+  const statusEl = document.getElementById('geo-status-msg');
+  if (statusEl) {
+    statusEl.textContent = `✓ 지도 이동 및 핀 선택 완료: (${r.lat.toFixed(5)}, ${r.lng.toFixed(5)})`;
+    statusEl.style.color = 'var(--primary-dark)';
+  }
+  updateMiniPickerPosition(r.lat, r.lng);
+  syncAllInputClearButtons();
+}
+
+function handleAddressFieldInput(val) {
+  const trimmed = String(val || '').trim();
+  if (!trimmed) return;
+
+  if (tryParseGoogleMapsOrCoords(trimmed)) {
+    return;
+  }
+
+  if (/^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps|www\.google\.[^/]+\/maps|maps\.google\.[^/]+)/i.test(trimmed)) {
+    resolveShortGoogleMapsUrl(trimmed);
+  }
+}
+
+async function searchAndMoveOnMap() {
+  const addrInput = document.getElementById('item-address');
+  const nameInput = document.getElementById('item-name');
+  const query = (addrInput ? addrInput.value.trim() : '') || (nameInput ? nameInput.value.trim() : '');
+  const statusEl = document.getElementById('geo-status-msg');
+
   if (!query) {
-    showToast('검색할 장소명, 주소 또는 구글맵 좌표를 입력하세요.', 'error');
+    showToast('검색할 장소명, 주소 또는 좌표를 입력하세요.', 'error');
     return;
   }
 
   if (tryParseGoogleMapsOrCoords(query)) {
-    if (candBox) candBox.style.display = 'none';
     return;
   }
 
-  if (query.trim().length === 3 && /^[A-Za-z]{3}$/.test(query.trim())) {
-    const airportMatch = await getAirportFromIdb(query.trim());
+  if (/^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps|www\.google\.[^/]+\/maps|maps\.google\.[^/]+)/i.test(query)) {
+    await resolveShortGoogleMapsUrl(query);
+    return;
+  }
+
+  if (query.length === 3 && /^[A-Za-z]{3}$/.test(query)) {
+    const airportMatch = await getAirportFromIdb(query);
     if (airportMatch && airportMatch.lat && airportMatch.lng) {
-      document.getElementById('item-lat').value = airportMatch.lat;
-      document.getElementById('item-lng').value = airportMatch.lng;
-      document.getElementById('item-address').value = `${airportMatch.city || airportMatch.name} (${airportMatch.iata})`;
-      statusEl.textContent = `✓ 공항 좌표 적용: (${Number(airportMatch.lat).toFixed(4)}, ${Number(airportMatch.lng).toFixed(4)})`;
-      updateMiniPickerPosition(airportMatch.lat, airportMatch.lng);
-      syncAllInputClearButtons();
+      applySelectedLocationCandidate({
+        name: airportMatch.city || airportMatch.name,
+        display: `${airportMatch.city || airportMatch.name} (${airportMatch.iata})`,
+        lat: Number(airportMatch.lat),
+        lng: Number(airportMatch.lng)
+      });
       return;
     }
   }
 
-  statusEl.textContent = '⏳ 위치 검색 중...';
-  if (candBox) { candBox.style.display = 'none'; candBox.replaceChildren(); }
-
-  const trip = getActiveTrip();
-  const cityHint = (trip && trip.city && !query.includes(trip.city)) ? `${trip.city} ${query}` : query;
+  if (statusEl) {
+    statusEl.textContent = '⏳ 지도에서 위치를 찾는 중...';
+    statusEl.style.color = 'var(--blue)';
+  }
+  hideGeoResultsPanel();
 
   try {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&accept-language=ko&limit=5&q=${encodeURIComponent(cityHint)}`;
-    const res = await fetch(url);
-    const results = res.ok ? await res.json() : [];
-
+    const trip = getActiveTrip();
+    const refCenter = getTripReferenceCenter(trip);
+    const results = await queryMultiGeocoders(query);
     if (!Array.isArray(results) || results.length === 0) {
-      statusEl.textContent = '검색 결과가 없습니다. [🗺️ 구글맵 열기]에서 좌표를 복사하거나 [📍 지도에서 찍기]를 이용해 주세요.';
+      if (statusEl) {
+        statusEl.textContent = '검색 결과가 없습니다. 주변 역 이름이나 도시명으로 검색하거나 지도를 직접 터치해 주세요.';
+        statusEl.style.color = 'var(--coral)';
+      }
       return;
     }
 
-    if (results.length === 1) {
-      const r = results[0];
-      const lat = parseFloat(r.lat);
-      const lng = parseFloat(r.lon);
-      document.getElementById('item-lat').value = lat.toFixed(6);
-      document.getElementById('item-lng').value = lng.toFixed(6);
-      document.getElementById('item-address').value = r.display_name;
-      statusEl.textContent = `✓ 위치 확인 완료: (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-      updateMiniPickerPosition(lat, lng);
-      syncAllInputClearButtons();
-    } else if (candBox) {
-      statusEl.textContent = `검색 결과 ${results.length}건 중 정확한 장소를 선택하세요.`;
-      candBox.style.display = 'flex';
-      results.forEach(r => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'geo-candidate-item';
-        const shortName = r.name || r.display_name.split(',')[0];
-        btn.innerHTML = `<span class="geo-candidate-name">${escapeHtmlString(shortName)}</span><span class="geo-candidate-addr">${escapeHtmlString(r.display_name)}</span>`;
-        btn.onclick = () => {
-          const lat = parseFloat(r.lat);
-          const lng = parseFloat(r.lon);
-          document.getElementById('item-lat').value = lat.toFixed(6);
-          document.getElementById('item-lng').value = lng.toFixed(6);
-          document.getElementById('item-address').value = r.display_name;
-          statusEl.textContent = `✓ 선택 완료: (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-          candBox.style.display = 'none';
-          updateMiniPickerPosition(lat, lng);
-          syncAllInputClearButtons();
-        };
-        candBox.appendChild(btn);
-      });
-    }
+    applySelectedLocationCandidate(results[0]);
+    renderGeoResultsPanel(results, refCenter);
   } catch (e) {
-    statusEl.textContent = '오프라인 상태입니다. [📍 지도에서 찍기]로 직접 위치를 지정해 주세요.';
+    if (statusEl) {
+      statusEl.textContent = '오프라인 상태입니다. 아래 지도를 직접 터치해 핀을 찍어주세요.';
+      statusEl.style.color = 'var(--coral)';
+    }
   }
 }
 
@@ -2568,21 +2955,24 @@ function updateMiniPickerPosition(lat, lng) {
   if (!pickerMap) return;
   pickerMap.setView([lat, lng], 15);
   if (pickerMarker) pickerMarker.setLatLng([lat, lng]);
-  else pickerMarker = L.marker([lat, lng]).addTo(pickerMap);
+  else {
+    pickerMarker = L.marker([lat, lng], { draggable: true }).addTo(pickerMap);
+    pickerMarker.on('dragend', () => {
+      const pos = pickerMarker.getLatLng();
+      document.getElementById('item-lat').value = pos.lat.toFixed(6);
+      document.getElementById('item-lng').value = pos.lng.toFixed(6);
+      document.getElementById('geo-status-msg').textContent = `✓ 지도 핀 이동 완료: (${pos.lat.toFixed(5)}, ${pos.lng.toFixed(5)})`;
+      document.getElementById('geo-status-msg').style.color = 'var(--primary-dark)';
+    });
+  }
 }
 
-function toggleMiniPickerMap() {
-  const wrap = document.getElementById('mini-picker-wrap');
-  if (!wrap) return;
-  const isOpen = wrap.style.display === 'flex';
-  if (isOpen) {
-    wrap.style.display = 'none';
-    return;
-  }
-  wrap.style.display = 'flex';
-
+function initUnifiedLocationMap() {
   setTimeout(() => {
     if (typeof L === 'undefined') return;
+    const mapContainer = document.getElementById('mini-picker-map');
+    if (!mapContainer || mapContainer.offsetParent === null) return;
+
     const latVal = parseFloat(document.getElementById('item-lat').value);
     const lngVal = parseFloat(document.getElementById('item-lng').value);
     let initLat = !isNaN(latVal) ? latVal : 35.6812;
@@ -2619,17 +3009,20 @@ function toggleMiniPickerMap() {
         document.getElementById('item-lat').value = lat.toFixed(6);
         document.getElementById('item-lng').value = lng.toFixed(6);
         document.getElementById('geo-status-msg').textContent = `✓ 지도 핀 선택 완료: (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
-        if (pickerMarker) pickerMarker.setLatLng([lat, lng]);
-        else pickerMarker = L.marker([lat, lng]).addTo(pickerMap);
+        document.getElementById('geo-status-msg').style.color = 'var(--primary-dark)';
+        updateMiniPickerPosition(lat, lng);
       });
     }
+
     pickerMap.invalidateSize();
-    pickerMap.setView([initLat, initLng], 14);
+    pickerMap.setView([initLat, initLng], !isNaN(latVal) ? 15 : 13);
     if (!isNaN(latVal) && !isNaN(lngVal)) {
-      if (pickerMarker) pickerMarker.setLatLng([initLat, initLng]);
-      else pickerMarker = L.marker([initLat, initLng]).addTo(pickerMap);
+      updateMiniPickerPosition(initLat, initLng);
+    } else if (pickerMarker) {
+      pickerMap.removeLayer(pickerMarker);
+      pickerMarker = null;
     }
-  }, 80);
+  }, 90);
 }
 
 /* ================= Item Form Helpers & Submission ================= */
@@ -4840,10 +5233,6 @@ function closeModal(id) {
     AppData.editingItemId = null;
     const noticeBox = document.getElementById('flight-lookup-notice');
     if (noticeBox) noticeBox.style.display = 'none';
-    const pickerWrap = document.getElementById('mini-picker-wrap');
-    if (pickerWrap) pickerWrap.style.display = 'none';
-    const candBox = document.getElementById('geo-candidates-box');
-    if (candBox) candBox.style.display = 'none';
   }
   if (id === 'modal-expense') {
     editingExpenseId = null;
@@ -5186,16 +5575,31 @@ function openItemModal(mode) {
   document.getElementById('modal-item-title').textContent = CATEGORY_MODAL_TITLES[startCat].add;
   applyCategoryForm(startCat);
   openModal('modal-item');
+  if (startCat !== 'memo') initUnifiedLocationMap();
 }
 
 function openItemEditModal(itemId) {
   const trip = getActiveTrip();
   if (!trip) return;
   const currentDay = trip.days[AppData.activeDayIdx];
-  const item = (currentDay && currentDay.items) ? currentDay.items.find(i => i.id === itemId) : null;
+  let item = (currentDay && currentDay.items) ? currentDay.items.find(i => i.id === itemId) : null;
   if (!item) return;
 
-  AppData.editingItemId = itemId;
+  let resolvedItemId = itemId;
+  let resolvedDayDate = currentDay.date || '';
+  if (item.cat === 'hotel' && item.hotelGroupId && item.hotelRole !== 'checkin') {
+    for (const d of (trip.days || [])) {
+      const rootCheckin = (d.items || []).find(i => i.hotelGroupId === item.hotelGroupId && i.hotelRole === 'checkin');
+      if (rootCheckin) {
+        item = rootCheckin;
+        resolvedItemId = rootCheckin.id;
+        resolvedDayDate = d.date || resolvedDayDate;
+        break;
+      }
+    }
+  }
+
+  AppData.editingItemId = resolvedItemId;
   categoryDrafts = createEmptyCategoryDrafts();
   currentDraftAttachments = Array.isArray(item.attachments) ? item.attachments.map(a => ({ ...a })) : [];
   renderDraftAttachmentPreviews();
@@ -5216,7 +5620,7 @@ function openItemEditModal(itemId) {
     d.expenseCurrency = item.expenseCurrency || (cat === 'flight' ? 'KRW' : (trip.currency || 'JPY'));
 
     if (cat === 'flight') {
-      d.date = item.date || currentDay.date || '';
+      d.date = item.date || resolvedDayDate;
       d.flightCode = (item.flightCode || '').toUpperCase();
       d.depAirport = extractAirportCode(item.depAirport);
       d.arrAirport = extractAirportCode(item.arrAirport);
@@ -5225,7 +5629,7 @@ function openItemEditModal(itemId) {
       d.depCity = item.depCity || '';
       d.arrCity = item.arrCity || '';
     } else if (cat === 'hotel') {
-      const baseIn = item.checkinDate || currentDay.date || trip.startDate;
+      const baseIn = item.checkinDate || resolvedDayDate || trip.startDate;
       const n = parseInt(item.nights || '1', 10) || 1;
       d.checkinDate = baseIn;
       d.checkoutDate = item.checkoutDate || addDaysToDateString(baseIn, n);
@@ -5236,7 +5640,7 @@ function openItemEditModal(itemId) {
       d.luggage = item.luggage || '짐보관 가능';
     } else if (cat === 'place') {
       d.subtype = isPlaceSubtype ? item.cat : 'place';
-      d.date = item.date || currentDay.date || '';
+      d.date = item.date || resolvedDayDate;
       d.time = item.time || '10:00';
       d.duration = item.duration || '1시간';
     }
@@ -5244,10 +5648,12 @@ function openItemEditModal(itemId) {
 
   applyCategoryForm(cat);
   openModal('modal-item');
+  if (cat !== 'memo') initUnifiedLocationMap();
 }
 
 function applyCategoryForm(cat) {
   currentCategory = cat;
+  hideGeoResultsPanel();
   document.getElementById('field-flight').style.display = (cat === 'flight') ? 'flex' : 'none';
   document.getElementById('field-hotel').style.display = (cat === 'hotel') ? 'flex' : 'none';
   document.getElementById('field-place-type').style.display = (cat === 'place') ? 'flex' : 'none';
@@ -5258,8 +5664,6 @@ function applyCategoryForm(cat) {
 
   const noticeBox = document.getElementById('flight-lookup-notice');
   if (noticeBox) noticeBox.style.display = 'none';
-  const candBox = document.getElementById('geo-candidates-box');
-  if (candBox) candBox.style.display = 'none';
 
   const nameLabels = {
     hotel: '숙소 이름',
@@ -5271,16 +5675,35 @@ function applyCategoryForm(cat) {
 }
 
 /* ================= Backup, Quick Rate & Sample ================= */
-function buildBackupPayload() {
+async function buildBackupPayload(includeAttachments = true) {
+  let attachments = [];
+  if (includeAttachments) {
+    const referencedIds = new Set();
+    (AppData.trips || []).forEach(t => {
+      (t.days || []).forEach(d => {
+        (d.items || []).forEach(it => {
+          if (Array.isArray(it.attachments)) {
+            it.attachments.forEach(a => { if (a && a.id) referencedIds.add(a.id); });
+          }
+        });
+      });
+    });
+    if (referencedIds.size > 0) {
+      const allRecords = await getAllAttachmentRecordsFromIdb();
+      attachments = allRecords.filter(rec => rec && referencedIds.has(rec.id));
+    }
+  }
+
   return {
-    version: '1.3.0',
+    version: '1.4.0',
     exportDate: getLocalDateString(new Date()),
     trips: AppData.trips || [],
-    masterChecklist: masterChecklist || []
+    masterChecklist: masterChecklist || [],
+    attachments
   };
 }
 
-function updateBackupStatusSummary() {
+async function updateBackupStatusSummary() {
   const el = document.getElementById('backup-status-summary');
   if (!el) return;
   const trips = AppData.trips || [];
@@ -5290,7 +5713,8 @@ function updateBackupStatusSummary() {
       t.days.forEach(d => { totalItems += Array.isArray(d.items) ? d.items.length : 0; });
     }
   });
-  el.textContent = `📊 현재 데이터: 여행 ${trips.length}개 · 세부 일정 ${totalItems}개 · 상시 준비물 ${(masterChecklist || []).length}개`;
+  const allAtts = await getAllAttachmentRecordsFromIdb();
+  el.textContent = `📊 현재 데이터: 여행 ${trips.length}개 · 세부 일정 ${totalItems}개 · 첨부파일 ${allAtts.length}개 · 상시 준비물 ${(masterChecklist || []).length}개`;
 }
 
 function openBackupModal() {
@@ -5300,9 +5724,10 @@ function openBackupModal() {
   openModal('modal-backup');
 }
 
-function exportDataToFile() {
+async function exportDataToFile() {
   try {
-    const payload = buildBackupPayload();
+    const includeAtt = document.getElementById('backup-include-attachments')?.checked !== false;
+    const payload = await buildBackupPayload(includeAtt);
     const jsonString = JSON.stringify(payload, null, 2);
     const filename = `tripnote_backup_${getLocalDateString(new Date())}.json`;
     const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
@@ -5317,15 +5742,18 @@ function exportDataToFile() {
     a.remove();
 
     setTimeout(() => URL.revokeObjectURL(url), 5000);
-    showToast(`📥 ${filename} 내보내기 완료! (미리보기에서 차단 시 클립보드 복사를 이용해 주세요)`, 'success');
+    const attMsg = payload.attachments.length > 0 ? ` (첨부파일 ${payload.attachments.length}개 포함)` : '';
+    showToast(`📥 ${filename} 내보내기 완료!${attMsg}`, 'success');
   } catch (err) {
     showToast(`내보내기 오류: ${err.message}`, 'error');
   }
 }
 
-function copyBackupJsonToClipboard() {
+async function copyBackupJsonToClipboard() {
   try {
-    const jsonString = JSON.stringify(buildBackupPayload(), null, 2);
+    const includeAtt = document.getElementById('backup-include-attachments')?.checked !== false;
+    const payload = await buildBackupPayload(includeAtt);
+    const jsonString = JSON.stringify(payload, null, 2);
     const ta = document.createElement('textarea');
     ta.value = jsonString;
     ta.style.position = 'fixed';
@@ -5357,7 +5785,7 @@ function validateTripObject(t) {
   return true;
 }
 
-function restoreFromBackupJsonString(rawText) {
+async function restoreFromBackupJsonString(rawText) {
   const cleaned = String(rawText || '').replace(/^\uFEFF/, '').trim();
   if (!cleaned) {
     throw new Error('JSON 내용이 비어 있습니다.');
@@ -5372,6 +5800,16 @@ function restoreFromBackupJsonString(rawText) {
     }
   }
 
+  let restoredAttCount = 0;
+  if (Array.isArray(imported.attachments)) {
+    for (const rec of imported.attachments) {
+      if (rec && rec.id && rec.dataUrl) {
+        const ok = await saveAttachmentRecordToIdb(rec);
+        if (ok) restoredAttCount++;
+      }
+    }
+  }
+
   AppData.trips = imported.trips;
   if (Array.isArray(imported.masterChecklist)) {
     masterChecklist = imported.masterChecklist;
@@ -5379,22 +5817,23 @@ function restoreFromBackupJsonString(rawText) {
   AppData.activeTripId = AppData.trips[0] ? AppData.trips[0].id : null;
   AppData.activeDayIdx = 0;
   saveDataToStorage();
-  updateBackupStatusSummary();
+  await updateBackupStatusSummary();
   closeModal('modal-backup');
   renderHomeScreen();
 
   let restoredItems = 0;
   AppData.trips.forEach(t => t.days.forEach(d => { restoredItems += (d.items ? d.items.length : 0); }));
-  showToast(`🎉 복원 완료! 여행 ${AppData.trips.length}개(일정 ${restoredItems}개)가 복구되었습니다.`, 'success');
+  const attNotice = restoredAttCount > 0 ? `, 첨부파일 ${restoredAttCount}개` : '';
+  showToast(`🎉 복원 완료! 여행 ${AppData.trips.length}개(일정 ${restoredItems}개${attNotice})가 복구되었습니다.`, 'success');
 }
 
 function importDataFromFile(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     try {
-      restoreFromBackupJsonString(e.target.result);
+      await restoreFromBackupJsonString(e.target.result);
     } catch (err) {
       showToast(`파일 복원 실패: ${err.message}`, 'error');
     } finally {
@@ -5408,11 +5847,11 @@ function importDataFromFile(event) {
   reader.readAsText(file, 'UTF-8');
 }
 
-function importDataFromText() {
+async function importDataFromText() {
   const pasteEl = document.getElementById('backup-json-paste');
   if (!pasteEl) return;
   try {
-    restoreFromBackupJsonString(pasteEl.value);
+    await restoreFromBackupJsonString(pasteEl.value);
   } catch (err) {
     showToast(`텍스트 복원 실패: ${err.message}`, 'error');
   }
