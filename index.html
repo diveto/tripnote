@@ -2658,7 +2658,6 @@ function cleanAddressQueryVariants(rawQuery, tripCity) {
 
   addVariant(cleaned);
 
-  // 앞부분 번지수(예: 1917, 1-19-1)를 제거한 동/지역 단위 주소 생성
   const withoutHouseNum = cleaned
     .replace(/^[\d\-]+\s+/, '')
     .replace(/,\s*[\d\-]+/g, '')
@@ -3343,13 +3342,20 @@ async function submitTimelineItem() {
 
     let existingGroupId = null;
     if (AppData.editingItemId) {
-      const prev = currentDay.items.find(i => i.id === AppData.editingItemId);
-      if (prev && prev.hotelGroupId) existingGroupId = prev.hotelGroupId;
+      for (const d of (trip.days || [])) {
+        const prev = (d.items || []).find(i => i.id === AppData.editingItemId);
+        if (prev) {
+          existingGroupId = prev.hotelGroupId || null;
+          break;
+        }
+      }
     }
+
+    const resolvedGroupId = existingGroupId || ('hotel_grp_' + Date.now());
 
     itemObj = {
       id: AppData.editingItemId || ('item_' + Date.now()),
-      hotelGroupId: existingGroupId || ('hotel_grp_' + Date.now()),
+      hotelGroupId: resolvedGroupId,
       hotelRole: 'checkin',
       cat: 'hotel',
       name,
@@ -3410,8 +3416,14 @@ async function submitTimelineItem() {
   }
 
   if (AppData.editingItemId) {
-    const oldDay = trip.days[AppData.activeDayIdx];
-    const oldItem = oldDay ? oldDay.items.find(i => i.id === AppData.editingItemId) : null;
+    let oldItem = null;
+    for (const d of (trip.days || [])) {
+      const found = (d.items || []).find(i => i.id === AppData.editingItemId);
+      if (found) {
+        oldItem = found;
+        break;
+      }
+    }
     if (oldItem && Array.isArray(oldItem.attachments)) {
       const keptIds = new Set(attachments.map(a => a.id));
       oldItem.attachments.forEach(oldAtt => {
@@ -3420,14 +3432,20 @@ async function submitTimelineItem() {
     }
 
     if (cat === 'hotel') {
+      trip.days.forEach(d => {
+        d.items = (d.items || []).filter(i => i.id !== AppData.editingItemId && i.hotelGroupId !== itemObj.hotelGroupId);
+      });
       distributeHotelItemsAcrossDays(trip, itemObj, targetDayIdx);
     } else {
-      if (targetDayIdx === AppData.activeDayIdx) {
-        const idx = currentDay.items.findIndex(i => i.id === AppData.editingItemId);
-        if (idx !== -1) currentDay.items[idx] = itemObj;
-        else currentDay.items.push(itemObj);
+      const sameDayIdx = currentDay.items.findIndex(i => i.id === AppData.editingItemId);
+      trip.days.forEach((d, dIdx) => {
+        if (dIdx !== targetDayIdx || sameDayIdx === -1) {
+          d.items = (d.items || []).filter(i => i.id !== AppData.editingItemId);
+        }
+      });
+      if (targetDayIdx === AppData.activeDayIdx && sameDayIdx !== -1) {
+        currentDay.items[sameDayIdx] = itemObj;
       } else {
-        currentDay.items = currentDay.items.filter(i => i.id !== AppData.editingItemId);
         trip.days[targetDayIdx].items.push(itemObj);
         AppData.activeDayIdx = targetDayIdx;
       }
