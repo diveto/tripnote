@@ -1661,7 +1661,7 @@ function extractAirportCode(raw) {
   if (parenMatch) return parenMatch[1];
   const exactMatch = str.match(/^[A-Z]{3}$/);
   if (exactMatch) return exactMatch[0];
-  const wordMatch = str.match(/\b([A-Z]{3})\b/);
+  const wordMatch = str.match(/([A-Z]{3})/);
   return wordMatch ? wordMatch[1] : str;
 }
 
@@ -1745,17 +1745,18 @@ async function refreshOpenAviationDatabase(manual = false) {
     ]);
 
     const airportsMap = new Map();
-    airportsTxt.split(/\r?\n/).forEach(line => {
+    airportsTxt.split(/?
+/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const iata = (cols[4] || '').trim().toUpperCase();
-      if (iata && iata !== '\\N' && iata.length === 3) {
+      if (iata && iata !== '\N' && iata.length === 3) {
         airportsMap.set(iata, {
           iata,
           name: cols[1] || iata,
           city: cols[2] || iata,
           country: cols[3] || '',
-          icao: (cols[5] && cols[5] !== '\\N') ? cols[5].trim().toUpperCase() : '',
+          icao: (cols[5] && cols[5] !== '\N') ? cols[5].trim().toUpperCase() : '',
           lat: parseFloat(cols[6]) || null,
           lng: parseFloat(cols[7]) || null
         });
@@ -1763,16 +1764,17 @@ async function refreshOpenAviationDatabase(manual = false) {
     });
 
     const airlinesMap = new Map();
-    airlinesTxt.split(/\r?\n/).forEach(line => {
+    airlinesTxt.split(/?
+/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const iata = (cols[3] || '').trim().toUpperCase();
       const active = (cols[7] || '').trim().toUpperCase();
-      if (iata && iata !== '\\N' && iata !== '-' && iata.length === 2) {
+      if (iata && iata !== '\N' && iata !== '-' && iata.length === 2) {
         if (!airlinesMap.has(iata) || active === 'Y') {
           airlinesMap.set(iata, {
             iata,
-            icao: (cols[4] && cols[4] !== '\\N') ? cols[4].trim().toUpperCase() : '',
+            icao: (cols[4] && cols[4] !== '\N') ? cols[4].trim().toUpperCase() : '',
             name: cols[1] || iata
           });
         }
@@ -1780,7 +1782,8 @@ async function refreshOpenAviationDatabase(manual = false) {
     });
 
     const routesMap = new Map();
-    routesTxt.split(/\r?\n/).forEach(line => {
+    routesTxt.split(/?
+/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const airline = (cols[0] || '').trim().toUpperCase();
@@ -2643,15 +2646,15 @@ function cleanAddressQueryVariants(rawQuery, tripCity) {
   let normalized = String(rawQuery || '').trim();
   Object.keys(countryMap).forEach(ko => {
     const en = countryMap[ko];
-    normalized = normalized.replace(new RegExp(`(?:^|[\\s,]+)${ko}(?:$|[\\s,]+)`, 'g'), `, ${en} `);
+    normalized = normalized.replace(new RegExp(`(?:^|[\s,]+)${ko}(?:$|[\s,]+)`, 'g'), `, ${en} `);
   });
 
   addVariant(normalized);
 
   let cleaned = normalized
     .replace(/〒?\s*\d{3}-\d{4}/g, ' ')
-    .replace(/\b\d{5,6}\b/g, ' ')
-    .replace(/\b\d+\s*(?:층|호|F|B\d+F?)\b/gi, ' ')
+    .replace(/\d{5,6}/g, ' ')
+    .replace(/\d+\s*(?:층|호|F|B\d+F?)/gi, ' ')
     .replace(/,\s*,/g, ',')
     .replace(/\s+/g, ' ')
     .trim();
@@ -3194,8 +3197,15 @@ function distributeHotelItemsAcrossDays(trip, baseHotelItem, fallbackDayIdx) {
 
   const existingAttachments = Array.isArray(baseHotelItem.attachments) ? baseHotelItem.attachments : [];
 
-  trip.days.forEach(d => {
-    d.items = (d.items || []).filter(i => i.hotelGroupId !== groupId);
+  // 수정 전 각 일차에서 해당 숙소가 있던 원래 인덱스 위치 기록
+  const prevIndicesByDay = new Map();
+  trip.days.forEach((d, dIdx) => {
+    const items = d.items || [];
+    const foundIdx = items.findIndex(i => i.hotelGroupId === groupId || i.id === baseHotelItem.id);
+    if (foundIdx !== -1) {
+      prevIndicesByDay.set(dIdx, foundIdx);
+    }
+    d.items = items.filter(i => i.hotelGroupId !== groupId && i.id !== baseHotelItem.id);
   });
 
   let startIdx = trip.days.findIndex(d => d.date === inDate);
@@ -3217,10 +3227,14 @@ function distributeHotelItemsAcrossDays(trip, baseHotelItem, fallbackDayIdx) {
       attachments: existingAttachments.map(a => ({ ...a }))
     };
 
-    if (role === 'checkout') {
-      trip.days[targetIdx].items.unshift(clonedItem);
+    const dayItems = trip.days[targetIdx].items;
+    if (prevIndicesByDay.has(targetIdx)) {
+      const insertAt = Math.min(prevIndicesByDay.get(targetIdx), dayItems.length);
+      dayItems.splice(insertAt, 0, clonedItem);
+    } else if (role === 'checkout') {
+      dayItems.unshift(clonedItem);
     } else {
-      trip.days[targetIdx].items.push(clonedItem);
+      dayItems.push(clonedItem);
     }
   }
 
@@ -3432,9 +3446,6 @@ async function submitTimelineItem() {
     }
 
     if (cat === 'hotel') {
-      trip.days.forEach(d => {
-        d.items = (d.items || []).filter(i => i.id !== AppData.editingItemId && i.hotelGroupId !== itemObj.hotelGroupId);
-      });
       distributeHotelItemsAcrossDays(trip, itemObj, targetDayIdx);
     } else {
       const sameDayIdx = currentDay.items.findIndex(i => i.id === AppData.editingItemId);
@@ -4151,7 +4162,8 @@ function renderTimeline() {
     if (item.notes && item.notes.trim()) {
       const notesEl = document.createElement('div');
       notesEl.className = 'card-notes-clamp';
-      notesEl.textContent = item.notes.trim().replace(/\n+/g, ' ');
+      notesEl.textContent = item.notes.trim().replace(/
++/g, ' ');
       body.appendChild(notesEl);
     }
 
@@ -4400,7 +4412,8 @@ function buildShareScheduleText(scope = 'day') {
     });
   });
 
-  return lines.join('\n').trim();
+  return lines.join('
+').trim();
 }
 
 function openShareScheduleModal() {
@@ -5813,7 +5826,7 @@ function validateTripObject(t) {
 }
 
 async function restoreFromBackupJsonString(rawText) {
-  const cleaned = String(rawText || '').replace(/^\uFEFF/, '').trim();
+  const cleaned = String(rawText || '').replace(/^﻿/, '').trim();
   if (!cleaned) {
     throw new Error('JSON 내용이 비어 있습니다.');
   }
