@@ -1745,18 +1745,17 @@ async function refreshOpenAviationDatabase(manual = false) {
     ]);
 
     const airportsMap = new Map();
-    airportsTxt.split(/?
-/).forEach(line => {
+    airportsTxt.split(/\r?\n/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const iata = (cols[4] || '').trim().toUpperCase();
-      if (iata && iata !== '\N' && iata.length === 3) {
+      if (iata && iata !== '\\N' && iata.length === 3) {
         airportsMap.set(iata, {
           iata,
           name: cols[1] || iata,
           city: cols[2] || iata,
           country: cols[3] || '',
-          icao: (cols[5] && cols[5] !== '\N') ? cols[5].trim().toUpperCase() : '',
+          icao: (cols[5] && cols[5] !== '\\N') ? cols[5].trim().toUpperCase() : '',
           lat: parseFloat(cols[6]) || null,
           lng: parseFloat(cols[7]) || null
         });
@@ -1764,17 +1763,16 @@ async function refreshOpenAviationDatabase(manual = false) {
     });
 
     const airlinesMap = new Map();
-    airlinesTxt.split(/?
-/).forEach(line => {
+    airlinesTxt.split(/\r?\n/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const iata = (cols[3] || '').trim().toUpperCase();
       const active = (cols[7] || '').trim().toUpperCase();
-      if (iata && iata !== '\N' && iata !== '-' && iata.length === 2) {
+      if (iata && iata !== '\\N' && iata !== '-' && iata.length === 2) {
         if (!airlinesMap.has(iata) || active === 'Y') {
           airlinesMap.set(iata, {
             iata,
-            icao: (cols[4] && cols[4] !== '\N') ? cols[4].trim().toUpperCase() : '',
+            icao: (cols[4] && cols[4] !== '\\N') ? cols[4].trim().toUpperCase() : '',
             name: cols[1] || iata
           });
         }
@@ -1782,8 +1780,7 @@ async function refreshOpenAviationDatabase(manual = false) {
     });
 
     const routesMap = new Map();
-    routesTxt.split(/?
-/).forEach(line => {
+    routesTxt.split(/\r?\n/).forEach(line => {
       if (!line) return;
       const cols = parseCsvLine(line);
       const airline = (cols[0] || '').trim().toUpperCase();
@@ -4162,8 +4159,7 @@ function renderTimeline() {
     if (item.notes && item.notes.trim()) {
       const notesEl = document.createElement('div');
       notesEl.className = 'card-notes-clamp';
-      notesEl.textContent = item.notes.trim().replace(/
-+/g, ' ');
+      notesEl.textContent = item.notes.trim().replace(/\n+/g, ' ');
       body.appendChild(notesEl);
     }
 
@@ -4412,8 +4408,7 @@ function buildShareScheduleText(scope = 'day') {
     });
   });
 
-  return lines.join('
-').trim();
+  return lines.join('\n').trim();
 }
 
 function openShareScheduleModal() {
